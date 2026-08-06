@@ -7,6 +7,10 @@ export interface Product {
   shortDescription: string;
   fullDescription: string;
   bulkAvailability: string;
+  moq?: string;
+  cutForm?: string;
+  moistureLevel?: string;
+  originRegion?: string;
   moistureContent: string;
   form: string;
   image: string;

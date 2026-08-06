@@ -94,7 +94,7 @@ function DockItem({
       onKeyDown={handleKeyDown}
     >
       {Children.map(children, child =>
-        cloneElement(child as ReactElement, { isHovered })
+        cloneElement(child as ReactElement<any>, { isHovered })
       )}
     </motion.div>
   );

@@ -65,7 +65,7 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
     const catToUse = selectedCategoryFilter || activeCategory;
     const matchesCategory = catToUse === "All" || p.category === catToUse;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          p.hindiName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (p.hindiName ? p.hindiName.toLowerCase().includes(searchQuery.toLowerCase()) : false) ||
                           p.botanicalName.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
