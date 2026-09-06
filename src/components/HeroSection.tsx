@@ -45,117 +45,86 @@ export const HeroSection = ({ onOpenQuoteModal }: HeroSectionProps) => {
   return (
     <section
       id="home"
-      className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-[#172925] text-[#D0D9D8] pt-28 sm:pt-32 lg:pt-36 pb-12 selection:bg-[#769489] selection:text-[#172925]"
+      className="relative min-h-[90vh] lg:min-h-screen flex flex-col justify-between overflow-hidden bg-[#172925] text-[#D0D9D8] pt-24 sm:pt-28 lg:pt-32 pb-8 lg:pb-10 selection:bg-[#769489] selection:text-[#172925]"
     >
-      {/* Background Radial Glow */}
-      <div className="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#213833]/60 rounded-full blur-[140px] pointer-events-none opacity-80" />
-      <div className="absolute top-1/2 right-10 -translate-y-1/2 w-[500px] h-[500px] bg-[#98B4A1]/20 rounded-full blur-[160px] pointer-events-none" />
+      {/* Full Cinematic Desktop & Mobile Background Image - Perfectly Framed */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <img
+          src="/images/bg image.png"
+          alt="Shiva Jadibuti Store Himalayan Botanical Glass Terrarium"
+          className="w-full h-full object-cover object-[80%_center] sm:object-right md:object-[85%_center] lg:object-[90%_center] xl:object-right opacity-90 lg:opacity-100"
+        />
+        {/* Cinematic Directional Vignette Overlays for flawless text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#172925] via-[#172925]/85 to-transparent sm:via-[#172925]/60 lg:from-[#172925]/90 lg:via-[#172925]/45 lg:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#172925] via-transparent to-[#172925]/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#172925]/50 via-transparent to-[#172925]" />
+      </div>
+
+      {/* Background Subtle Radial Glow */}
+      <div className="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#213833]/40 rounded-full blur-[140px] pointer-events-none opacity-50" />
 
       {/* Main Hero Container */}
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full relative z-10 flex-1 flex flex-col justify-center py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="max-w-3xl xl:max-w-4xl space-y-8 lg:space-y-10 relative z-20">
           
-          {/* Left Column: Headline & CTA */}
-          <div className="lg:col-span-7 space-y-8 lg:space-y-10 relative z-20">
-            
-            {/* Brand Logo Sub-Badge */}
-            <div className="inline-flex items-center space-x-3 px-4 py-2 rounded-full bg-[#213833] border border-white/[0.12] text-xs font-mono text-[#769489] uppercase tracking-widest animate-fade-in shadow-md">
-              <img src="/images/logo.png" alt="Shiva Jadibuti Store Logo" className="w-6 h-6 object-cover rounded-full border border-white/20 bg-white" />
-              <span>India&apos;s Trusted Wholesale Herbal Supplier</span>
-            </div>
-
-            {/* Headline with Word-by-Word Reveal Animation */}
-            <h1 className="font-dm-sans font-normal tracking-[-0.05em] text-[40px] leading-[44px] sm:text-[68px] sm:leading-[68px] md:text-[84px] md:leading-[82px] lg:text-[96px] lg:leading-[92px] xl:text-[110px] xl:leading-[102px] flex flex-col space-y-1">
-              {/* Line 1 */}
-              <div className="flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-4">
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.3s" }} className="text-[#D0D9D8]">The</span>
-                </span>
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.4s" }} className="text-[#D0D9D8]">Purity</span>
-                </span>
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.5s" }} className="text-[#D0D9D8]/40">of</span>
-                </span>
-              </div>
-
-              {/* Line 2 */}
-              <div className="flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-4">
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.6s" }} className="text-[#D0D9D8]/40">Himalayan</span>
-                </span>
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.7s" }} className="text-[#D0D9D8]/40">Herbs</span>
-                </span>
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.8s" }} className="text-[#D0D9D8]">in</span>
-                </span>
-              </div>
-
-              {/* Line 3 */}
-              <div className="flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-4">
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "0.9s" }} className="text-[#D0D9D8]">Every</span>
-                </span>
-                <span className="overflow-hidden inline-block animate-word-reveal">
-                  <span style={{ animationDelay: "1.0s" }} className="text-[#769489] font-medium">Batch</span>
-                </span>
-              </div>
-            </h1>
-
-            {/* CTA & Description Row */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-5 sm:gap-8 animate-fade-up delay-600">
-              <button
-                onClick={() => onOpenQuoteModal?.("Raw Botanical Wholesale Batch")}
-                className="w-full sm:w-[220px] lg:w-[250px] h-14 lg:h-[62px] bg-[#213833] hover:bg-[#769489] text-[#D0D9D8] hover:text-[#172925] border border-white/10 hover:border-[#769489] rounded-full font-inter font-medium text-sm lg:text-base tracking-[-0.02em] flex items-center justify-center space-x-2 transition-all duration-300 shadow-xl active:scale-95 cursor-pointer"
-              >
-                <span>Explore Products</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </button>
-
-              <p className="text-[#98B4A1] max-w-[320px] font-inter font-light text-xs sm:text-sm lg:text-base leading-relaxed tracking-[-0.02em]">
-                Direct B2B wholesale supply of laboratory-tested raw herbs, roots, barks, leaves, and spices in metric tons.
-              </p>
-            </div>
-
+          {/* Brand Logo Sub-Badge */}
+          <div className="inline-flex items-center space-x-3.5 px-4 py-2 rounded-full bg-[#213833]/90 backdrop-blur-md border border-white/[0.12] text-xs font-mono text-[#769489] uppercase tracking-widest animate-fade-in shadow-md">
+            <img src="/images/logo.png" alt="Shiva Jadibuti Store Logo" className="w-8 h-8 object-contain p-0.5 rounded-full border border-white/20 bg-white shrink-0 shadow-sm" />
+            <span>India&apos;s Trusted Wholesale Herbal Supplier</span>
           </div>
 
-          {/* Right Column: Single Masterpiece 3D Glass Terrarium Sculpture */}
-          <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end animate-scale-in delay-500 mt-6 lg:mt-0">
-            <BorderGlow
-              edgeSensitivity={30}
-              glowColor="158 14% 52%"
-              backgroundColor="#213833"
-              borderRadius={24}
-              glowRadius={40}
-              glowIntensity={1.3}
-              coneSpread={30}
-              animated={true}
-              colors={['#769489', '#98B4A1', '#D0D9D8']}
-              className="w-full max-w-[420px] lg:max-w-[480px]"
+          {/* Headline with Word-by-Word Reveal Animation */}
+          <h1 className="font-dm-sans font-normal tracking-[-0.05em] text-[40px] leading-[44px] sm:text-[68px] sm:leading-[68px] md:text-[84px] md:leading-[82px] lg:text-[96px] lg:leading-[92px] xl:text-[108px] xl:leading-[100px] flex flex-col space-y-1">
+            {/* Line 1 */}
+            <div className="flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-4">
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.3s" }} className="text-[#D0D9D8]">The</span>
+              </span>
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.4s" }} className="text-[#D0D9D8]">Purity</span>
+              </span>
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.5s" }} className="text-[#D0D9D8]/40">of</span>
+              </span>
+            </div>
+
+            {/* Line 2 */}
+            <div className="flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-4">
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.6s" }} className="text-[#D0D9D8]/40">Himalayan</span>
+              </span>
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.7s" }} className="text-[#D0D9D8]/40">Herbs</span>
+              </span>
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.8s" }} className="text-[#D0D9D8]">in</span>
+              </span>
+            </div>
+
+            {/* Line 3 */}
+            <div className="flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-4">
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "0.9s" }} className="text-[#D0D9D8]">Every</span>
+              </span>
+              <span className="overflow-hidden inline-block animate-word-reveal">
+                <span style={{ animationDelay: "1.0s" }} className="text-[#769489] font-medium">Batch</span>
+              </span>
+            </div>
+          </h1>
+
+          {/* CTA & Description Row */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-5 sm:gap-8 animate-fade-up delay-600">
+            <button
+              onClick={() => onOpenQuoteModal?.("Raw Botanical Wholesale Batch")}
+              className="w-full sm:w-[220px] lg:w-[250px] h-14 lg:h-[62px] bg-[#213833]/90 hover:bg-[#769489] text-[#D0D9D8] hover:text-[#172925] border border-white/15 hover:border-[#769489] rounded-full font-inter font-medium text-sm lg:text-base tracking-[-0.02em] flex items-center justify-center space-x-2 transition-all duration-300 shadow-2xl active:scale-95 cursor-pointer backdrop-blur-md"
             >
-              <div className="relative aspect-square rounded-[24px] overflow-hidden group">
-                <img
-                  src="/images/hero_glass_capsule.png"
-                  alt="3D Glass Terrarium Capsule Masterpiece"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#172925] via-transparent to-transparent opacity-60 pointer-events-none" />
-                
-                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#172925]/90 backdrop-blur-md border border-white/10 flex items-center justify-between text-xs">
-                  <div>
-                    <span className="text-[10px] font-mono text-[#769489] uppercase tracking-widest block">Masterpiece Visual</span>
-                    <span className="text-[#D0D9D8] font-serif text-sm">3D Glass Terrarium Capsule</span>
-                  </div>
-                  <button
-                    onClick={() => onOpenQuoteModal?.("Glass Terrarium Specimen")}
-                    className="px-3.5 py-1.5 rounded-full bg-[#769489] text-[#172925] font-bold text-[11px] uppercase tracking-wider hover:bg-[#D0D9D8] transition-colors"
-                  >
-                    Get Quote
-                  </button>
-                </div>
-              </div>
-            </BorderGlow>
+              <span>Explore Products</span>
+              <ArrowUpRight className="w-5 h-5" />
+            </button>
+
+            <p className="text-[#98B4A1] max-w-[340px] font-inter font-light text-xs sm:text-sm lg:text-base leading-relaxed tracking-[-0.02em]">
+              Direct B2B wholesale supply of laboratory-tested raw herbs, roots, barks, leaves, and spices in metric tons.
+            </p>
           </div>
 
         </div>

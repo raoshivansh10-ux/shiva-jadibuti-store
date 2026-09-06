@@ -84,7 +84,7 @@ export const GlobalDock = ({ onOpenQuoteModal }: GlobalDockProps) => {
     {
       icon: <WhatsAppIcon />,
       label: "WhatsApp",
-      href: "https://wa.me/919876543210?text=Hello%20Shiva%20Jadibuti%20Store%2C%20I%20am%20inquiring%20about%20wholesale%20botanicals."
+      href: "https://wa.me/919958833536?text=Hello%20Shiva%20Jadibuti%20Store%2C%20I%20am%20inquiring%20about%20wholesale%20botanicals."
     },
     {
       icon: <Download className="w-[18px] h-[18px]" />,

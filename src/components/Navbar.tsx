@@ -9,9 +9,9 @@ interface NavbarProps {
 export const Navbar = ({ onOpenQuoteModal }: NavbarProps) => {
   const navItems = [
     { label: "Products", href: "/#products" },
-    { label: "Raw Spices", href: "/raw-spices" },
+    { label: "Spices", href: "/raw-spices" },
     { label: "Categories", href: "/#categories" },
-    { label: "Health Cures", href: "/#health-solutions" },
+    { label: "Health", href: "/#health-solutions" },
     { label: "Why Us", href: "/#why-us" },
     { label: "Process", href: "/#process" },
     { label: "Gallery", href: "/#gallery" },

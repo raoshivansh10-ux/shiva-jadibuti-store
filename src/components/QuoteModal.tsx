@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PRODUCTS } from "@/data/products";
 import { RAW_SPICES } from "@/data/rawSpices";
-import { X, Send, CheckCircle2, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import { X, Send, CheckCircle2, MessageSquare, ChevronDown, ChevronUp, AlertCircle, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
+import emailjs from "@emailjs/browser";
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ export const QuoteModal = ({ isOpen, onClose, initialProduct }: QuoteModalProps)
   const [notes, setNotes] = useState("");
   
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (initialProduct) {
@@ -37,23 +40,101 @@ export const QuoteModal = ({ isOpen, onClose, initialProduct }: QuoteModalProps)
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setErrorMessage("");
 
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ["#769489", "#98B4A1", "#D0D9D8"],
-    });
+    // Validate required fields
+    if (!productName.trim() || !quantity.trim() || !name.trim() || !phone.trim()) {
+      setErrorMessage("Please fill out all required fields marked with *.");
+      return;
+    }
+
+    setLoading(true);
+
+    // Prepare formatted email payload
+    const specificationsText = `Cut Form: ${cutForm}${notes.trim() ? ` | Special Notes: ${notes.trim()}` : ""}`;
+    const emailBody = `NEW WHOLESALE QUOTE REQUEST
+
+Product: ${productName}
+Quantity: ${quantity} ${unit}
+
+Customer Details:
+Name: ${name}
+Phone/WhatsApp: ${phone}
+Company: ${company.trim() || "Not provided"}
+City: ${city.trim() || "Not provided"}
+Specifications: ${specificationsText}
+
+Submitted from:
+Shiva Jadibuti Store Website`;
+
+    const templateParams = {
+      product: productName,
+      quantity: quantity,
+      unit: unit,
+      name: name,
+      phone: phone,
+      company: company.trim() || "Not provided",
+      city: city.trim() || "Not provided",
+      specifications: specificationsText,
+      subject: `New Wholesale Quote Request — ${productName}`,
+      message: emailBody,
+    };
+
+    try {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      let emailSent = false;
+
+      // 1. Send via EmailJS if configured
+      if (serviceId && templateId && publicKey && serviceId !== "your_service_id_here") {
+        await emailjs.send(serviceId, templateId, templateParams, publicKey);
+        emailSent = true;
+      }
+
+      // 2. Dispatch to server-side backup route
+      const res = await fetch("/api/send-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          phone,
+          company: company.trim() || "N/A",
+          city: city.trim() || "N/A",
+          product: productName,
+          quantity: `${quantity} ${unit}`,
+          message: specificationsText,
+          formType: "Modal Wholesale Quote Request",
+        }),
+      });
+
+      if (!emailSent && !res.ok) {
+        throw new Error("Failed to dispatch quote request");
+      }
+
+      setSubmitted(true);
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#769489", "#98B4A1", "#D0D9D8"],
+      });
+    } catch (err) {
+      console.error("EmailJS / Quote dispatch error:", err);
+      setErrorMessage("Something went wrong. Please try again or contact us on WhatsApp.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const openWhatsApp = () => {
     const text = encodeURIComponent(
       `Hello Shiva Jadibuti Store,\nI would like to request a bulk price quote:\n• Product: ${productName}\n• Quantity: ${quantity} ${unit}\n• Name: ${name || 'Buyer'}\n• Phone: ${phone || 'N/A'}${company ? `\n• Company: ${company}` : ''}${city ? `\n• City: ${city}` : ''}`
     );
-    window.open(`https://wa.me/919876543210?text=${text}`, "_blank");
+    window.open(`https://wa.me/919958833536?text=${text}`, "_blank");
   };
 
   return (
@@ -70,6 +151,7 @@ export const QuoteModal = ({ isOpen, onClose, initialProduct }: QuoteModalProps)
           <button
             onClick={() => {
               setSubmitted(false);
+              setErrorMessage("");
               onClose();
             }}
             className="absolute top-5 right-5 p-2 rounded-full bg-[#172925] text-[#D0D9D8] hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
@@ -79,41 +161,49 @@ export const QuoteModal = ({ isOpen, onClose, initialProduct }: QuoteModalProps)
           </button>
 
           {submitted ? (
-            /* Simple Success Screen */
-            <div className="text-center py-8 space-y-4">
+            /* Success Screen matching exact user requirements */
+            <div className="text-center py-6 space-y-4">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 220 }}
-                className="w-16 h-16 bg-[#769489]/20 rounded-full flex items-center justify-center mx-auto text-[#769489]"
+                className="w-14 h-14 bg-[#769489]/20 rounded-full flex items-center justify-center mx-auto text-[#769489]"
               >
-                <CheckCircle2 className="w-10 h-10" />
+                <CheckCircle2 className="w-9 h-9" />
               </motion.div>
 
               <h3 className="text-2xl font-serif font-bold text-[#D0D9D8]">
-                Quote Request Sent!
+                Quote request sent successfully! We’ll contact you shortly.
               </h3>
+
+              <div className="bg-[#172925] border border-white/[0.08] rounded-2xl p-4 max-w-sm mx-auto text-left space-y-1 text-xs text-[#D0D9D8]">
+                <p>• <strong>Product:</strong> {productName}</p>
+                <p>• <strong>Quantity:</strong> {quantity} {unit}</p>
+                <p>• <strong>Contact:</strong> {name} ({phone})</p>
+              </div>
+
               <p className="text-xs sm:text-sm text-[#98B4A1] max-w-sm mx-auto leading-relaxed font-light">
-                Thank you <strong>{name || "Valued Buyer"}</strong>. Our team is calculating standard factory rates for <strong>{quantity} {unit} of {productName}</strong> and will contact you via WhatsApp / phone within 2 hours.
+                Our wholesale sales desk has received your request and will contact you via phone or WhatsApp with factory pricing.
               </p>
 
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={openWhatsApp}
-                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg transition-all cursor-pointer"
                 >
-                  <MessageSquare className="w-4 h-4" />
+                  <MessageSquare className="w-3.5 h-3.5" />
                   <span>Connect on WhatsApp</span>
                 </button>
 
                 <button
                   onClick={() => {
                     setSubmitted(false);
+                    setErrorMessage("");
                     onClose();
                   }}
-                  className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#172925] border border-white/10 text-[#D0D9D8] font-semibold text-xs cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#172925] border border-white/10 text-[#D0D9D8] font-semibold text-xs cursor-pointer hover:bg-white/5"
                 >
-                  Close Window
+                  Close
                 </button>
               </div>
             </div>
@@ -131,6 +221,14 @@ export const QuoteModal = ({ isOpen, onClose, initialProduct }: QuoteModalProps)
                   Get instant pricing for raw herbs & spices in bulk.
                 </p>
               </div>
+
+              {/* Error Message Display */}
+              {errorMessage && (
+                <div className="mb-4 p-3.5 rounded-xl bg-red-950/50 border border-red-500/30 text-red-300 text-xs flex items-start space-x-2.5">
+                  <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 
@@ -283,10 +381,20 @@ export const QuoteModal = ({ isOpen, onClose, initialProduct }: QuoteModalProps)
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button
                     type="submit"
-                    className="w-full py-3.5 px-6 rounded-xl bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] font-bold text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2 transition-all active:scale-95 cursor-pointer"
+                    disabled={loading}
+                    className="w-full py-3.5 px-6 rounded-xl bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] font-bold text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-2 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Submit Quote Request</span>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Submitting Quote Request...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Submit Quote Request</span>
+                      </>
+                    )}
                   </button>
 
                   <button

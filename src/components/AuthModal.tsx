@@ -261,7 +261,7 @@ export const AuthModal = () => {
                         type="tel"
                         value={signupPhone}
                         onChange={(e) => setSignupPhone(e.target.value)}
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 99588 33536"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#172925] border border-white/[0.12] text-xs text-[#D0D9D8]"
                         required
                       />

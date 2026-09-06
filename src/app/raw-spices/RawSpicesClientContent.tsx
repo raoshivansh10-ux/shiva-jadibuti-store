@@ -12,7 +12,6 @@ import { Footer } from "@/components/Footer";
 import { QuoteModal } from "@/components/QuoteModal";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { BackToTop } from "@/components/BackToTop";
-import { GlobalDock } from "@/components/GlobalDock";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WishlistDrawer } from "@/components/WishlistDrawer";
 import { AuthModal } from "@/components/AuthModal";
@@ -67,9 +66,6 @@ export const RawSpicesClientContent = () => {
 
       {/* Authentication Login & Signup Modal */}
       <AuthModal />
-
-      {/* Interactive React Bits Dock Component */}
-      <GlobalDock onOpenQuoteModal={handleOpenQuoteModal} />
 
       {/* Floating Action Buttons */}
       <WhatsAppButton />

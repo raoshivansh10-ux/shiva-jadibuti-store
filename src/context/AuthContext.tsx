@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       name: email.split("@")[0].toUpperCase() || "Wholesale Buyer",
       email: email,
       companyName: "Ayurvedic Remedies Ltd",
-      phone: "+91 98765 43210",
+      phone: "+91 99588 33536",
       businessType: "Ayurvedic Medicine Manufacturer"
     };
     setUser(mockUser);
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       name: details.name || "Valued Partner",
       email: details.email || "buyer@company.com",
       companyName: details.companyName || "Herbal Enterprises",
-      phone: details.phone || "+91 98765 43210",
+      phone: details.phone || "+91 99588 33536",
       gstNumber: details.gstNumber || "",
       businessType: details.businessType || "Wholesale Trader"
     };

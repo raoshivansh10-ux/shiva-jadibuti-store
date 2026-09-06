@@ -232,7 +232,7 @@ export const PillNav = ({
         
         {/* Brand Pill Logo */}
         <a
-          className="pill-logo flex items-center space-x-2.5 px-3"
+          className="pill-logo flex items-center space-x-2 px-2.5"
           href="/"
           aria-label="Shiva Jadibuti Store Home"
           ref={logoRef}
@@ -240,11 +240,11 @@ export const PillNav = ({
           <img
             src="/images/logo.png"
             alt="Shiva Jadibuti Store Logo"
-            className="w-7 h-7 object-cover rounded-full border border-white/20 shadow-sm bg-white"
+            className="w-7 h-7 object-contain p-0.5 rounded-full border border-white/20 shadow-sm bg-white shrink-0"
           />
           <div className="flex flex-col text-left">
             <span className="pill-logo-text">SHIVA JADIBUTI</span>
-            <span className="pill-logo-subtext">PURE QUALITY • EST. 1994</span>
+            <span className="pill-logo-subtext">EST. 1994</span>
           </div>
         </a>
 
@@ -281,29 +281,16 @@ export const PillNav = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="hidden lg:flex items-center space-x-3">
-          {/* User Account Login/Profile Button */}
-          <button
-            onClick={() => {
-              setAuthMode(user ? "login" : "login");
-              setIsAuthModalOpen(true);
-            }}
-            className="px-3 py-2 rounded-full bg-[#213833] hover:bg-[#769489] text-[#D0D9D8] hover:text-[#172925] transition-all border border-white/[0.08] flex items-center space-x-1.5 text-xs font-semibold cursor-pointer"
-            title={user ? `Account: ${user.name}` : "Sign In / Create Account"}
-          >
-            <User className="w-4 h-4 text-[#769489] hover:text-[#172925]" />
-            <span className="max-w-[90px] truncate">{user ? user.name : "Sign In"}</span>
-          </button>
-
+        <div className="hidden lg:flex items-center space-x-1.5">
           {/* Wishlist Heart Button */}
           <button
             onClick={() => setIsWishlistOpen(true)}
-            className="p-2.5 rounded-full bg-[#213833] hover:bg-rose-500/20 text-[#98B4A1] hover:text-rose-400 transition-all border border-white/[0.08] relative cursor-pointer"
+            className="p-2 rounded-full bg-[#213833] hover:bg-rose-500/20 text-[#98B4A1] hover:text-rose-400 transition-all border border-white/[0.08] relative cursor-pointer"
             title="View Favorites / Wishlist"
           >
-            <Heart className={`w-4 h-4 ${totalWishlistItems > 0 ? "fill-rose-400 text-rose-400" : ""}`} />
+            <Heart className={`w-3.5 h-3.5 ${totalWishlistItems > 0 ? "fill-rose-400 text-rose-400" : ""}`} />
             {totalWishlistItems > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-extrabold flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-rose-500 text-white text-[8px] font-extrabold flex items-center justify-center">
                 {totalWishlistItems}
               </span>
             )}
@@ -312,12 +299,12 @@ export const PillNav = ({
           {/* Cart Icon Button */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="p-2.5 rounded-full bg-[#213833] hover:bg-[#769489] text-[#98B4A1] hover:text-[#172925] transition-all border border-white/[0.08] relative cursor-pointer"
+            className="p-2 rounded-full bg-[#213833] hover:bg-[#769489] text-[#98B4A1] hover:text-[#172925] transition-all border border-white/[0.08] relative cursor-pointer"
             title="View Quote Cart"
           >
-            <ShoppingBag className="w-4 h-4" />
+            <ShoppingBag className="w-3.5 h-3.5" />
             {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#769489] text-[#172925] text-[9px] font-extrabold flex items-center justify-center animate-pulse">
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#769489] text-[#172925] text-[8px] font-extrabold flex items-center justify-center animate-pulse">
                 {totalItems}
               </span>
             )}
@@ -325,7 +312,7 @@ export const PillNav = ({
 
           <button
             onClick={() => generateProductCataloguePDF()}
-            className="p-2.5 rounded-full bg-[#213833] hover:bg-[#769489] text-[#98B4A1] hover:text-[#172925] transition-all border border-white/[0.08]"
+            className="p-2 rounded-full bg-[#213833] hover:bg-[#769489] text-[#98B4A1] hover:text-[#172925] transition-all border border-white/[0.08]"
             title="Download PDF Catalog"
           >
             <Download className="w-3.5 h-3.5" />
@@ -355,23 +342,23 @@ export const PillNav = ({
       <div className="mobile-menu-popover mobile-only" ref={mobileMenuRef} style={cssVars}>
         <ul className="mobile-menu-list">
           {items.map((item, i) => (
-            <li key={item.href || `mobile-item-${i}`}>
+            <li key={item.href || `mobile-item-${i}`} className="w-full">
               <a
                 href={item.href}
-                className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
+                className={`mobile-menu-link w-full${activeHref === item.href ? ' is-active' : ''}`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.label}
               </a>
             </li>
           ))}
-          <li className="pt-2 flex flex-col space-y-2">
+          <li className="pt-2 w-full flex flex-col space-y-2 items-center">
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 onOpenQuoteModal?.();
               }}
-              className="w-full py-3 rounded-full bg-[#769489] text-[#172925] font-bold text-xs uppercase tracking-widest text-center"
+              className="w-full py-3.5 rounded-full bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] font-bold text-xs uppercase tracking-widest text-center transition-all cursor-pointer"
             >
               Get Quote
             </button>
@@ -380,7 +367,7 @@ export const PillNav = ({
                 setIsMobileMenuOpen(false);
                 generateProductCataloguePDF();
               }}
-              className="w-full py-2.5 text-xs text-[#98B4A1] tracking-widest uppercase flex items-center justify-center space-x-2"
+              className="w-full py-2.5 text-xs text-[#98B4A1] hover:text-[#D0D9D8] tracking-widest uppercase flex items-center justify-center space-x-2 transition-colors cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-[#769489]" />
               <span>Download PDF Catalog</span>

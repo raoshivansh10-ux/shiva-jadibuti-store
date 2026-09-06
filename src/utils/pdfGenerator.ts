@@ -35,7 +35,7 @@ export const generateProductCataloguePDF = () => {
   doc.setFontSize(9);
   doc.text("Web: www.shivajadibutistore.com", pageWidth - 14, 18, { align: "right" });
   doc.text("Email: info@shivajadibutistore.com", pageWidth - 14, 24, { align: "right" });
-  doc.text("Phone: +91 98765 43210", pageWidth - 14, 30, { align: "right" });
+  doc.text("Phone: +91 99588 33536", pageWidth - 14, 30, { align: "right" });
 
   // Document Title
   let y = 54;

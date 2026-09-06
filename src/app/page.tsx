@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { TrustedClientsSection } from "@/components/TrustedClientsSection";
@@ -15,7 +15,6 @@ import { Footer } from "@/components/Footer";
 import { QuoteModal } from "@/components/QuoteModal";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { BackToTop } from "@/components/BackToTop";
-import { GlobalDock } from "@/components/GlobalDock";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WishlistDrawer } from "@/components/WishlistDrawer";
 import { AuthModal } from "@/components/AuthModal";
@@ -23,6 +22,14 @@ import { AuthModal } from "@/components/AuthModal";
 export default function Home() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quoteInitialProduct, setQuoteInitialProduct] = useState<string | undefined>(undefined);
+
+  // Ensure the page always starts strictly from the top on reload/load
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+  }, []);
 
   const handleOpenQuoteModal = (productName?: string) => {
     setQuoteInitialProduct(productName);
@@ -80,9 +87,6 @@ export default function Home() {
 
       {/* Authentication Login & Signup Modal */}
       <AuthModal />
-
-      {/* Interactive Spring Magnified Dock */}
-      <GlobalDock onOpenQuoteModal={handleOpenQuoteModal} />
 
       {/* Floating Actions */}
       <WhatsAppButton />

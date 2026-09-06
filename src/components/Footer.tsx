@@ -38,11 +38,11 @@ export const Footer = () => {
           
           {/* Brand Col */}
           <div className="md:col-span-4 space-y-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3.5">
               <img
                 src="/images/logo.png"
                 alt="Shiva Jadibuti Store Logo"
-                className="w-12 h-12 object-cover rounded-full border border-white/20 shadow-md bg-white"
+                className="w-16 h-16 object-contain p-1 rounded-full border border-white/20 shadow-md bg-white shrink-0"
               />
               <div>
                 <span className="text-base font-serif text-[#D0D9D8] uppercase tracking-[0.15em] block font-bold">
@@ -108,7 +108,7 @@ export const Footer = () => {
             <div className="flex items-center space-x-3 pt-1">
               {/* WhatsApp */}
               <a
-                href="https://wa.me/919876543210?text=Hello%20Shiva%20Jadibuti%20Store%2C%20I%20am%20inquiring%20about%20wholesale%20herbs%20and%20raw%20materials."
+                href="https://wa.me/919958833536?text=Hello%20Shiva%20Jadibuti%20Store%2C%20I%20am%20inquiring%20about%20wholesale%20herbs%20and%20raw%20materials."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 rounded-full bg-[#213833] hover:bg-[#25D366] text-[#D0D9D8] hover:text-white border border-white/[0.1] transition-all duration-300 flex items-center justify-center"

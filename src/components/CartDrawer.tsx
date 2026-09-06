@@ -22,7 +22,7 @@ export const CartDrawer = ({ onOpenQuoteModal }: CartDrawerProps) => {
     });
     text += "\nPlease share your direct wholesale rates and dispatch availability.";
 
-    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(text)}`, "_blank");
+    window.open(`https://wa.me/919958833536?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCheckoutQuote = () => {

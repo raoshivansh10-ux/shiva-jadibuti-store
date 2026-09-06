@@ -23,7 +23,7 @@ export const FAQS: FAQItem[] = [
   },
   {
     question: "How can I request a price quote or place a wholesale order?",
-    answer: "You can click on the 'Request a Quote' button on any product card, fill out our quick online quote request form, or connect directly with our wholesale sales desk via WhatsApp at +91 98765 43210 or email us at info@shivajadibutistore.com."
+    answer: "You can click on the 'Request a Quote' button on any product card, fill out our quick online quote request form, or connect directly with our wholesale sales desk via WhatsApp at +91 99588 33536 or email us at info@shivajadibutistore.com."
   },
   {
     question: "Do you provide Certificate of Analysis (COA) with bulk shipments?",

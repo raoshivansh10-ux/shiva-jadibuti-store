@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, CheckCircle2 } from "lucide-react";
+import { Send, CheckCircle2, Mail } from "lucide-react";
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -32,6 +32,7 @@ const GmailIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const ContactSection = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     company: "",
@@ -42,9 +43,25 @@ export const ContactSection = () => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+
+    try {
+      await fetch("/api/send-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          formType: "Contact Form Wholesale Inquiry",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to send inquiry:", err);
+    } finally {
+      setLoading(false);
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -75,7 +92,7 @@ export const ContactSection = () => {
 
               <div>
                 <span className="text-[#769489] uppercase tracking-widest block mb-1">Wholesale Phone & WhatsApp</span>
-                <a href="tel:+919876543210" className="text-[#D0D9D8] font-sans text-sm hover:text-[#769489] transition-colors">+91 98765 43210</a>
+                <a href="tel:+919958833536" className="text-[#D0D9D8] font-sans text-sm hover:text-[#769489] transition-colors">+91 99588 33536</a>
               </div>
 
               <div>
@@ -92,7 +109,7 @@ export const ContactSection = () => {
               <div className="flex items-center space-x-3">
                 {/* WhatsApp */}
                 <a
-                  href="https://wa.me/919876543210?text=Hello%20Shiva%20Jadibuti%20Store%2C%20I%20am%20inquiring%20about%20wholesale%20herbs."
+                  href="https://wa.me/919958833536?text=Hello%20Shiva%20Jadibuti%20Store%2C%20I%20am%20inquiring%20about%20wholesale%20herbs."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3.5 rounded-full bg-[#213833] hover:bg-[#25D366] text-[#D0D9D8] hover:text-white border border-white/[0.1] transition-all duration-300 flex items-center justify-center"
@@ -139,12 +156,53 @@ export const ContactSection = () => {
           {/* Form */}
           <div className="lg:col-span-7 bg-[#213833] rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl">
             {submitted ? (
-              <div className="text-center py-16 space-y-4">
-                <CheckCircle2 className="w-12 h-12 text-[#769489] mx-auto" />
-                <h3 className="text-2xl font-serif text-[#D0D9D8]">Inquiry Received</h3>
-                <p className="text-xs text-[#98B4A1] font-light max-w-sm mx-auto">
-                  Our wholesale desk will review your specifications and issue a formal quote within 4 business hours.
+              <div className="text-center py-12 space-y-5">
+                <CheckCircle2 className="w-14 h-14 text-[#769489] mx-auto" />
+                <h3 className="text-2xl sm:text-3xl font-serif text-[#D0D9D8]">Inquiry Sent Successfully</h3>
+                
+                <div className="bg-[#172925] border border-white/[0.08] rounded-2xl p-4 max-w-md mx-auto text-left space-y-2 text-xs">
+                  <div className="flex items-center space-x-2 text-[#769489] font-mono uppercase tracking-wider">
+                    <Mail className="w-4 h-4" />
+                    <span>Transmitted to Official Gmail Desk</span>
+                  </div>
+                  <p className="text-[#D0D9D8] font-sans">
+                    Your wholesale requirements have been dispatched directly to <strong className="text-emerald-400 font-mono">shivajadibutistore@gmail.com</strong>.
+                  </p>
+                </div>
+
+                <p className="text-xs text-[#98B4A1] font-light max-w-sm mx-auto leading-relaxed">
+                  Our wholesale desk reviews all direct specs and will reply back to <strong>{formData.email || "your email"}</strong> or call <strong>{formData.phone || "your number"}</strong> within 2-4 business hours.
                 </p>
+
+                <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <a
+                    href={`mailto:shivajadibutistore@gmail.com?subject=Wholesale%20Inquiry%20from%20${encodeURIComponent(formData.name || "Buyer")}&body=${encodeURIComponent(
+                      `Name: ${formData.name}\nCompany: ${formData.company}\nPhone: ${formData.phone}\nProduct: ${formData.product}\nQuantity: ${formData.quantity}\nRequirements: ${formData.message}`
+                    )}`}
+                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#172925] hover:bg-[#EA4335] text-[#D0D9D8] hover:text-white border border-white/10 text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center space-x-2"
+                  >
+                    <GmailIcon />
+                    <span>Open Email Thread</span>
+                  </a>
+
+                  <button
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormData({
+                        name: "",
+                        company: "",
+                        email: "",
+                        phone: "",
+                        product: "",
+                        quantity: "",
+                        message: ""
+                      });
+                    }}
+                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                  >
+                    Send Another Inquiry
+                  </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -239,10 +297,17 @@ export const ContactSection = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-full border border-[#769489] hover:bg-[#769489] text-[#769489] hover:text-[#172925] font-semibold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer"
+                  disabled={loading}
+                  className="w-full py-4 rounded-full border border-[#769489] hover:bg-[#769489] text-[#769489] hover:text-[#172925] font-semibold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Submit Wholesale Inquiry</span>
+                  {loading ? (
+                    <span>Transmitting to shivajadibutistore@gmail.com...</span>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Submit Wholesale Inquiry</span>
+                    </>
+                  )}
                 </button>
               </form>
             )}

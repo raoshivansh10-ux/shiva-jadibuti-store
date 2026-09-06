@@ -85,24 +85,29 @@ export const HealthSolutionsSection = ({ onOpenQuoteModal }: HealthSolutionsSect
             >
               
               {/* Top Banner: Disease/Condition Visual vs Herb Solution Visual Split */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 border-b border-white/10 bg-[#172925]/60 relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 border-b border-white/10 bg-[#172925] relative">
                 
                 {/* Left: Disease / Ailment Side */}
-                <div className="relative h-56 sm:h-64 overflow-hidden border-r-0 sm:border-r border-b sm:border-b-0 border-white/10">
+                <div className="relative h-56 sm:h-64 overflow-hidden border-r-0 sm:border-r border-b sm:border-b-0 border-white/10 bg-gradient-to-br from-rose-950/40 via-[#172925] to-[#213833]">
                   <img
                     src={item.conditionImage}
-                    alt={item.conditionTitle}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-85"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#172925] via-[#172925]/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#172925] via-[#172925]/30 to-transparent" />
                   
-                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-mono text-rose-300 uppercase tracking-widest bg-rose-950/80 border border-rose-500/30 flex items-center space-x-1">
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-mono text-rose-300 uppercase tracking-widest bg-rose-950/90 border border-rose-500/40 backdrop-blur-md shadow-md flex items-center space-x-1.5 z-10">
                     <ShieldAlert className="w-3 h-3 text-rose-400" />
                     <span>Ailment & Pathology</span>
                   </span>
 
-                  <div className="absolute bottom-3 left-3 right-3 text-xs text-[#D0D9D8]">
-                    <span className="text-[10px] font-mono text-[#98B4A1] block">{item.category}</span>
+                  <div className="absolute bottom-3 left-3 right-3 text-xs text-[#D0D9D8] z-10">
+                    <span className="text-[10px] font-mono text-[#98B4A1] block uppercase tracking-wider">{item.category}</span>
                     <h4 className="font-serif font-bold text-sm text-[#D0D9D8] line-clamp-1">
                       {item.conditionTitle}
                     </h4>
@@ -110,20 +115,25 @@ export const HealthSolutionsSection = ({ onOpenQuoteModal }: HealthSolutionsSect
                 </div>
 
                 {/* Right: Botanical Remedy Solution Side */}
-                <div className="relative h-56 sm:h-64 overflow-hidden">
+                <div className="relative h-56 sm:h-64 overflow-hidden bg-gradient-to-br from-[#213833] via-[#172925] to-[#769489]/20">
                   <img
                     src={item.solutionHerbImage}
-                    alt={item.solutionHerbName}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#213833] via-[#213833]/30 to-transparent" />
 
-                  <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-[10px] font-mono text-[#172925] font-bold uppercase tracking-widest bg-[#769489] flex items-center space-x-1">
+                  <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-[10px] font-mono text-[#172925] font-bold uppercase tracking-widest bg-[#769489] border border-white/20 backdrop-blur-md shadow-md flex items-center space-x-1.5 z-10">
                     <CheckCircle className="w-3 h-3 text-[#172925]" />
                     <span>Natural Remedy</span>
                   </span>
 
-                  <div className="absolute bottom-3 left-3 right-3 text-xs text-[#D0D9D8]">
+                  <div className="absolute bottom-3 left-3 right-3 text-xs text-[#D0D9D8] z-10">
                     <span className="text-[10px] font-mono text-[#769489] block">{item.solutionHindiName}</span>
                     <h4 className="font-serif font-bold text-sm text-[#D0D9D8] line-clamp-1">
                       {item.solutionHerbName}
@@ -132,7 +142,7 @@ export const HealthSolutionsSection = ({ onOpenQuoteModal }: HealthSolutionsSect
                 </div>
 
                 {/* Center Badge Icon */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-[#769489] text-[#172925] shadow-2xl border-2 border-[#172925]">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-[#769489] text-[#172925] shadow-2xl border-2 border-[#172925]">
                   <ArrowRight className="w-4 h-4" />
                 </div>
 
@@ -247,14 +257,32 @@ export const HealthSolutionsSection = ({ onOpenQuoteModal }: HealthSolutionsSect
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl overflow-hidden h-40 relative border border-white/10">
-                  <img src={selectedCondition.conditionImage} alt="Condition" className="w-full h-full object-cover" />
+                <div className="rounded-2xl overflow-hidden h-40 relative border border-white/10 bg-gradient-to-br from-rose-950/40 via-[#172925] to-[#213833]">
+                  <img
+                    src={selectedCondition.conditionImage}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
+                  />
                   <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono bg-rose-950/80 text-rose-300">
                     Ailment Visual
                   </span>
                 </div>
-                <div className="rounded-2xl overflow-hidden h-40 relative border border-white/10">
-                  <img src={selectedCondition.solutionHerbImage} alt="Herb" className="w-full h-full object-cover" />
+                <div className="rounded-2xl overflow-hidden h-40 relative border border-white/10 bg-gradient-to-br from-[#213833] to-[#172925]">
+                  <img
+                    src={selectedCondition.solutionHerbImage}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
+                  />
                   <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono bg-[#769489] text-[#172925] font-bold">
                     Raw Herb Cure
                   </span>

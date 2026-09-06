@@ -11,7 +11,7 @@ export const BulkOrderCTA = ({ onOpenQuoteModal }: BulkOrderCTAProps) => {
     const text = encodeURIComponent(
       "Hello Shiva Jadibuti Store, I am inquiring about Wholesale Raw Spices / Khade Masale bulk quantities and distributor pricing."
     );
-    window.open(`https://wa.me/919876543210?text=${text}`, "_blank");
+    window.open(`https://wa.me/919958833536?text=${text}`, "_blank");
   };
 
   return (
@@ -44,11 +44,11 @@ export const BulkOrderCTA = ({ onOpenQuoteModal }: BulkOrderCTAProps) => {
 
           {/* Call Now */}
           <a
-            href="tel:+919876543210"
+            href="tel:+919958833536"
             className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#172925] hover:bg-[#769489] text-[#D0D9D8] hover:text-[#172925] border border-white/10 font-normal text-xs uppercase tracking-widest flex items-center justify-center space-x-2 transition-all"
           >
             <Phone className="w-4 h-4 text-[#769489]" />
-            <span>Call (+91 98765 43210)</span>
+            <span>Call (+91 99588 33536)</span>
           </a>
 
           {/* Request Quote */}
