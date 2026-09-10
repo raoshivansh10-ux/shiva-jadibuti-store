@@ -300,7 +300,7 @@ export const PillNav = ({
           <button
             onClick={() => setIsCartOpen(true)}
             className="p-2 rounded-full bg-[#213833] hover:bg-[#769489] text-[#98B4A1] hover:text-[#172925] transition-all border border-white/[0.08] relative cursor-pointer"
-            title="View Quote Cart"
+            title="View Shopping Cart"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             {totalItems > 0 && (
@@ -308,6 +308,22 @@ export const PillNav = ({
                 {totalItems}
               </span>
             )}
+          </button>
+
+          {/* User Account / Profile Button */}
+          <button
+            onClick={() => {
+              if (user) {
+                setIsAuthModalOpen(true);
+              } else {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }
+            }}
+            className="p-2 rounded-full bg-[#213833] hover:bg-[#769489] text-[#98B4A1] hover:text-[#172925] transition-all border border-white/[0.08] cursor-pointer"
+            title={user ? `Account (${user.name})` : "Sign In / Register"}
+          >
+            <User className="w-3.5 h-3.5" />
           </button>
 
           <button

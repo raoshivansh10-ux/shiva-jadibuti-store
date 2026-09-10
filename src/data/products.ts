@@ -1,3 +1,12 @@
+export interface RetailVariant {
+  id: string;
+  size: string; // e.g. "100 g", "250 g", "500 g", "1 Kg"
+  price: number; // Selling Price in INR
+  mrp: number; // Maximum Retail Price (strikethrough)
+  stock: number;
+  inStock: boolean;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -16,9 +25,122 @@ export interface Product {
   image: string;
   featured?: boolean;
   uses: string[];
+
+  // Retail B2C Fields
+  retailEnabled?: boolean;
+  retailPrice?: number;
+  retailVariants?: RetailVariant[];
+  retailStock?: number;
+  retailRating?: number;
+  retailReviewsCount?: number;
+
+  // Wholesale B2B Fields
+  wholesaleEnabled?: boolean;
+  wholesaleMoq?: string;
+  wholesaleUnit?: string;
+}
+
+/**
+ * Generate standard, market-accurate Ayurvedic retail packaging variants
+ */
+export function generateRetailVariants(basePrice100g: number): RetailVariant[] {
+  const p100 = basePrice100g;
+  const p250 = Math.round(basePrice100g * 2.3);
+  const p500 = Math.round(basePrice100g * 4.2);
+  const p1kg = Math.round(basePrice100g * 7.8);
+
+  return [
+    {
+      id: "100g",
+      size: "100 g",
+      price: p100,
+      mrp: Math.round(p100 * 1.3),
+      stock: 65,
+      inStock: true,
+    },
+    {
+      id: "250g",
+      size: "250 g",
+      price: p250,
+      mrp: Math.round(p250 * 1.3),
+      stock: 45,
+      inStock: true,
+    },
+    {
+      id: "500g",
+      size: "500 g",
+      price: p500,
+      mrp: Math.round(p500 * 1.3),
+      stock: 30,
+      inStock: true,
+    },
+    {
+      id: "1kg",
+      size: "1 Kg",
+      price: p1kg,
+      mrp: Math.round(p1kg * 1.3),
+      stock: 20,
+      inStock: true,
+    },
+  ];
+}
+
+/**
+ * Helper to get retail variants for any product with realistic fallback
+ */
+export function getProductRetailVariants(p: { id: string; name: string; category?: string; retailVariants?: RetailVariant[]; retailPrice?: number }): RetailVariant[] {
+  if (p.retailVariants && p.retailVariants.length > 0) {
+    return p.retailVariants;
+  }
+
+  const id = p.id.toLowerCase();
+  const name = p.name.toLowerCase();
+
+  // Super-premium items
+  if (id.includes("musli") || name.includes("musli")) {
+    return generateRetailVariants(399);
+  }
+  if (id.includes("saffron") || name.includes("kesar")) {
+    return [
+      { id: "1g", size: "1 g", price: 349, mrp: 450, stock: 100, inStock: true },
+      { id: "5g", size: "5 g", price: 1599, mrp: 2100, stock: 50, inStock: true },
+      { id: "10g", size: "10 g", price: 2999, mrp: 3999, stock: 30, inStock: true },
+    ];
+  }
+  if (id.includes("shilajit") || name.includes("shilajit")) {
+    return [
+      { id: "20g", size: "20 g Pure Resin", price: 799, mrp: 1099, stock: 80, inStock: true },
+      { id: "50g", size: "50 g Pure Resin", price: 1799, mrp: 2499, stock: 45, inStock: true },
+      { id: "100g", size: "100 g Pure Resin", price: 3299, mrp: 4499, stock: 25, inStock: true },
+    ];
+  }
+  if (id.includes("cardamom") || id.includes("clove") || id.includes("black-pepper")) {
+    return generateRetailVariants(249);
+  }
+  if (id.includes("ashwagandha") || id.includes("shatavari") || id.includes("mulethi") || id.includes("brahmi") || id.includes("moringa") || id.includes("cinnamon")) {
+    return generateRetailVariants(189);
+  }
+  if (id.includes("rose") || id.includes("hibiscus") || id.includes("kalonji") || id.includes("isabgol") || id.includes("arjun")) {
+    return generateRetailVariants(169);
+  }
+
+  // Standard herbs & powders
+  return generateRetailVariants(129);
+}
+
+/**
+ * Helper to get starting retail price
+ */
+export function getProductStartingRetailPrice(p: { id: string; name: string; retailPrice?: number; retailVariants?: RetailVariant[] }): number {
+  if (p.retailPrice) return p.retailPrice;
+  const variants = getProductRetailVariants(p);
+  return variants[0]?.price || 129;
 }
 
 export const PRODUCTS: Product[] = [
+  // -------------------------------------------------------------
+  // EXISTING CORE CATALOG (PRESERVED EXACTLY)
+  // -------------------------------------------------------------
   {
     id: "ashwagandha-root",
     name: "Ashwagandha Root",
@@ -243,5 +365,444 @@ export const PRODUCTS: Product[] = [
     image: "/images/arjun_minimal.png",
     featured: true,
     uses: ["Hridya (cardiac care) formulations", "Blood pressure management", "Cholesterol care syrups", "Astringent decoctions"]
+  },
+
+  // -------------------------------------------------------------
+  // EXPANDED WHOLESALE CATALOG ADDITIONS
+  // -------------------------------------------------------------
+  {
+    id: "ashoka-bark",
+    name: "Ashoka Bark",
+    hindiName: "अशोक छाल (Ashok Chhal)",
+    botanicalName: "Saraca asoca",
+    category: "Bark",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Genuine mature Saraca asoca tree bark sustainably harvested, cleaned, and sun-dried. Free from dirt and extraneous matter, ideal for classical Ayurvedic asava-arishta and uterine wellness formulations.",
+    bulkAvailability: "500 Kg - 20 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 9%",
+    form: "Whole Dried Bark Slices / Coarse Cut / Powder",
+    image: "/images/category_barks.png",
+    uses: ["Ayurvedic Asava & Arishta", "Botanical extract manufacturing", "Classical Kashayam preparations", "Female wellness tonics"]
+  },
+  {
+    id: "giloy-powder",
+    name: "Giloy Powder (Guduchi Churna)",
+    hindiName: "गिलोय चूर्ण (Giloy Churna)",
+    botanicalName: "Tinospora cordifolia",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Pure micro-pulverized mature Neem-tree climbing Giloy stem powder with standard bitter glucoside content. Free from carriers, maltodextrin, or anti-caking additives.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 7%",
+    form: "Ultra-fine 80-100 Mesh Micro Powder",
+    image: "/images/giloy_minimal.png",
+    uses: ["Immunity formulations", "Herbal tablets & capsules", "Ayurvedic kwath blends", "Nutraceutical premixes"]
+  },
+  {
+    id: "neem-powder",
+    name: "Neem Leaf Powder",
+    hindiName: "नीम पत्ता चूर्ण (Neem Churna)",
+    botanicalName: "Azadirachta indica",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Shade-dried green Neem leaves milled into fine green powder retaining natural Azadirachtin and bitter terpenoids. Ideal for cosmetics, botanical soaps, and herbal purifying blends.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 6%",
+    form: "Fine 80-100 Mesh Green Powder",
+    image: "/images/neem_minimal.png",
+    uses: ["Herbal cosmetics & face packs", "Skin care formulations", "Natural blood purifier blends", "Ayurvedic soaps & shampoos"]
+  },
+  {
+    id: "amla-powder",
+    name: "Amla Powder (Indian Gooseberry)",
+    hindiName: "सूखा आंवला चूर्ण (Amla Churna)",
+    botanicalName: "Phyllanthus emblica",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Premium deseeded wild Amla fruits pulverized under low-temperature milling to preserve heat-stable natural Vitamin C, gallic acid, and tannins. Ideal for Triphala and hair care blends.",
+    bulkAvailability: "500 Kg - 30 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 8%",
+    form: "Pure Deseeded Dried Fruit Powder (80 Mesh)",
+    image: "/images/amla_minimal.png",
+    uses: ["Triphala Churna manufacturing", "Chyawanprash raw material", "Hair oil & henna blends", "Natural antioxidant extracts"]
+  },
+  {
+    id: "brahmi-powder",
+    name: "Brahmi Powder (Gotu Kola)",
+    hindiName: "ब्राह्मी चूर्ण (Brahmi Churna)",
+    botanicalName: "Bacopa monnieri",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Clean farm-cultivated whole Bacopa Monnieri plant shade-dried and milled into fine powder with high active Bacosides. Suitable for nootropic formulations and memory tonics.",
+    bulkAvailability: "300 Kg - 15 Metric Tons",
+    moq: "300 Kg",
+    moistureContent: "< 7%",
+    form: "Fine 80 Mesh Herb Powder",
+    image: "/images/brahmi_minimal.png",
+    uses: ["Nootropic capsules", "Medhya Rasayana tonics", "Herbal hair care formulations", "Ayurvedic syrups"]
+  },
+  {
+    id: "tulsi-powder",
+    name: "Tulsi Leaf Powder (Holy Basil)",
+    hindiName: "तुलसी पत्ता चूर्ण (Tulsi Churna)",
+    botanicalName: "Ocimum tenuiflorum",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Aromatic Krishna and Rama Tulsi leaves shade-dried and pulverized under controlled temperature to preserve volatile Eugenol essential oil and rich emerald tone.",
+    bulkAvailability: "300 Kg - 15 Metric Tons",
+    moq: "300 Kg",
+    moistureContent: "< 7%",
+    form: "Fine Aromatic Leaf Powder (80 Mesh)",
+    image: "/images/tulsi_minimal.png",
+    uses: ["Herbal tea premixes", "Kasa (cough) syrups", "Immunity blends", "Nutraceutical wellness teas"]
+  },
+  {
+    id: "mulethi-powder",
+    name: "Mulethi Powder (Licorice / Yashtimadhu)",
+    hindiName: "मुलेठी चूर्ण (Mulethi Churna)",
+    botanicalName: "Glycyrrhiza glabra",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "High-glycyrrhizin unpeeled Mulethi roots pulverized into ultra-fine powder. Naturally sweet flavor profile, free from heavy fibers, ideal for throat and hyperacidity remedies.",
+    bulkAvailability: "500 Kg - 30 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 8%",
+    form: "Fine Cream-Yellow Extract Grade Powder",
+    image: "/images/mulethi_minimal.png",
+    uses: ["Throat lozenges & syrups", "Hyperacidity powders", "Ayurvedic cosmetic masks", "Herbal expectorants"]
+  },
+  {
+    id: "turmeric-finger",
+    name: "Turmeric Whole Fingers (Haldi Ganth)",
+    hindiName: "हल्दी गांठ (Sabut Haldi)",
+    botanicalName: "Curcuma longa",
+    category: "Spices",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Salem and Nizamabad grade double-polished whole turmeric finger rhizomes with high natural Curcumin content (> 3%). Thoroughly cleaned, cured, and hygienic sun-dried.",
+    bulkAvailability: "1000 Kg - 50 Metric Tons",
+    moq: "1000 Kg",
+    moistureContent: "< 9%",
+    form: "Double Polished Whole Dried Fingers / Bulbs",
+    image: "/images/saffron_minimal.png",
+    uses: ["Curcumin extraction", "Commercial spice grinding", "Ayurvedic medicines", "HORECA bulk supply"]
+  },
+  {
+    id: "turmeric-powder",
+    name: "Turmeric Powder (Haldi Churna)",
+    hindiName: "हल्दी पाउडर (Haldi Powder)",
+    botanicalName: "Curcuma longa",
+    category: "Spices / Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "High-curcumin pure golden yellow turmeric powder milled from cleaned Salem turmeric fingers. 100% pure with zero artificial color, starch, or adulteration.",
+    bulkAvailability: "1000 Kg - 50 Metric Tons",
+    moq: "1000 Kg",
+    moistureContent: "< 8%",
+    form: "Pure Micro-Milled Golden Powder",
+    image: "/images/saffron_minimal.png",
+    uses: ["Ayurvedic formulations", "Food & spice blends", "Curcumin supplements", "Herbal skincare"]
+  },
+  {
+    id: "black-pepper-whole",
+    name: "Black Pepper (Tellicherry Garbled)",
+    hindiName: "काली मिर्च (Kali Mirch)",
+    botanicalName: "Piper nigrum",
+    category: "Spices",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Premium Tellicherry Garbled Extra Bold black pepper berries harvested from Kerala spice belts. High piperine (> 5%), intense aroma, zero foreign matter.",
+    bulkAvailability: "1000 Kg - 50 Metric Tons",
+    moq: "1000 Kg",
+    moistureContent: "< 10%",
+    form: "Whole Dried Garbled Extra Bold Berries",
+    image: "/images/category_barks.png",
+    uses: ["Piperine extract manufacturing", "Trikatu Churna raw material", "Spice masalas", "Pharmaceutical formulations"]
+  },
+  {
+    id: "cumin-seeds",
+    name: "Cumin Seeds (Jeera Machine Cleaned)",
+    hindiName: "जीरा (Sabut Jeera)",
+    botanicalName: "Cuminum cyminum",
+    category: "Spices / Seeds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Unjha Gujarat grade whole cumin seeds sorted to 99% purity. Intense volatile cumin oil content, uniform brown color, and fresh aroma for food processing and Ayurveda.",
+    bulkAvailability: "1000 Kg - 40 Metric Tons",
+    moq: "1000 Kg",
+    moistureContent: "< 8%",
+    form: "99% Pure Machine Cleaned Whole Seeds",
+    image: "/images/saffron_minimal.png",
+    uses: ["Ayurvedic digestive churna", "Oleoresin extraction", "Commercial spice blends", "HORECA wholesale"]
+  },
+  {
+    id: "coriander-seeds",
+    name: "Coriander Seeds (Dhaniya Whole)",
+    hindiName: "साबुत धनिया (Sabut Dhaniya)",
+    botanicalName: "Coriandrum sativum",
+    category: "Spices / Seeds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "High-linalool whole coriander seeds sourced from Rajasthan and MP. Machine-cleaned, uniform size, free from infestation or split dust.",
+    bulkAvailability: "1000 Kg - 50 Metric Tons",
+    moq: "1000 Kg",
+    moistureContent: "< 8%",
+    form: "Whole Dried Green / Golden Oval Seeds",
+    image: "/images/category_herbs.png",
+    uses: ["Kashayam formulations", "Curry powder production", "Herbal infusions", "Essential oil extraction"]
+  },
+  {
+    id: "fennel-seeds",
+    name: "Fennel Seeds (Variyali / Saunf)",
+    hindiName: "सौंफ (Saunf / Moti Saunf)",
+    botanicalName: "Foeniculum vulgare",
+    category: "Seeds / Spices",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Sweet fragrant bold green Lucknowi and Gujarat fennel seeds. High essential oil (anethole) density, clean grading, sweet refreshing flavor.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 8%",
+    form: "Bold Green Whole Seeds",
+    image: "/images/category_herbs.png",
+    uses: ["Digestive mukhwas", "Ayurvedic syrups", "Confectionery flavoring", "Herbal infusions"]
+  },
+  {
+    id: "fenugreek-seeds",
+    name: "Fenugreek Seeds (Methi Dana)",
+    hindiName: "मेथी दाना (Sabut Methi)",
+    botanicalName: "Trigonella foenum-graecum",
+    category: "Seeds / Spices",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Premium machine-cleaned Rajasthani Fenugreek seeds rich in natural mucilage, 4-hydroxyisoleucine, and saponins. Free from stones and sand.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 7%",
+    form: "Machine Cleaned Yellow-Brown Seeds",
+    image: "/images/saffron_minimal.png",
+    uses: ["Metabolic wellness extracts", "Herbal hair care", "Spice masalas", "Pickle manufacturing"]
+  },
+  {
+    id: "isabgol-husk",
+    name: "Isabgol Husk (Psyllium Husk 99% Purity)",
+    hindiName: "इसबगोल की भूसी (Isabgol)",
+    botanicalName: "Plantago ovata",
+    category: "Seeds / Natural Ingredients",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Pure Sidhpur Grade-A white Isabgol husk with high swell volume (> 45 ml/g). Thoroughly sifted and graded for pharma dietary fiber formulations.",
+    bulkAvailability: "500 Kg - 20 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 10%",
+    form: "Grade-A White Flakes / Milled Husk Powder",
+    image: "/images/musli_minimal.png",
+    uses: ["Pharma dietary fiber syrups", "Laxative granules", "Nutraceutical wellness", "Gluten-free baking raw material"]
+  },
+  {
+    id: "moringa-leaf-powder",
+    name: "Moringa Leaf Powder (Organic Grade)",
+    hindiName: "मोरिंगा पत्ती पाउडर (Sahjan Powder)",
+    botanicalName: "Moringa oleifera",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Shade-dried drumstick tree leaves milled at low temperature. Retains vibrant green chlorophyll color, high plant protein, vitamins, and polyphenols.",
+    bulkAvailability: "500 Kg - 30 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 6%",
+    form: "80 Mesh Emerald Green Powder",
+    image: "/images/moringa_minimal.png",
+    uses: ["Superfood powder blends", "Multivitamin capsules", "Herbal smoothie mixes", "Nutraceutical tablets"]
+  },
+  {
+    id: "moringa-seeds",
+    name: "Moringa Seeds (PKM-1 / Wild)",
+    hindiName: "सहजन के बीज (Moringa Seeds)",
+    botanicalName: "Moringa oleifera",
+    category: "Seeds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Clean, mature dried Moringa Oleifera seeds suitable for high-yield cold-pressed Ben oil extraction and botanical cultivation.",
+    bulkAvailability: "500 Kg - 20 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 7%",
+    form: "Winged Whole Dry Seeds / De-shelled Kernels",
+    image: "/images/moringa_minimal.png",
+    uses: ["Moringa seed oil (Ben oil) extraction", "Water purification research", "Cosmetic lipids", "Agricultural seed supply"]
+  },
+  {
+    id: "rose-petals",
+    name: "Dried Rose Petals (Desi Gulab Patti)",
+    hindiName: "सूखी गुलाब पत्ती (Gulab Patti)",
+    botanicalName: "Rosa damascena",
+    category: "Flowers",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Fragrant, shade-dried crimson pink Indian Damask rose petals. Retains natural delicate floral aroma, free from chemical spray or stems.",
+    bulkAvailability: "200 Kg - 10 Metric Tons",
+    moq: "200 Kg",
+    moistureContent: "< 8%",
+    form: "Shade Dried Whole Crimson Petals / Cut Flakes",
+    image: "/images/musli_minimal.png",
+    uses: ["Gulkand preparation", "Herbal tea blends", "Ayurvedic cosmetics & ubtans", "Aromatherapy formulations"]
+  },
+  {
+    id: "hibiscus-flowers",
+    name: "Hibiscus Whole Dried Flowers",
+    hindiName: "सूखा गुड़हल फूल (Gudhal Phool)",
+    botanicalName: "Hibiscus rosa-sinensis",
+    category: "Flowers",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Deep ruby red shade-dried whole Hibiscus flowers rich in natural anthocyanins, fruit acids, and bioflavonoids. Cleanly sorted without dirt.",
+    bulkAvailability: "300 Kg - 15 Metric Tons",
+    moq: "300 Kg",
+    moistureContent: "< 8%",
+    form: "Whole Dried Crimson Flowers / Calyces",
+    image: "/images/musli_minimal.png",
+    uses: ["Herbal tart teas & infusions", "Hair oil & conditioning shampoo", "Natural botanical red coloring", "Ayurvedic heart tonics"]
+  },
+  {
+    id: "hibiscus-powder",
+    name: "Hibiscus Flower Powder",
+    hindiName: "गुड़हल फूल चूर्ण (Gudhal Churna)",
+    botanicalName: "Hibiscus rosa-sinensis",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Micro-pulverized whole dried Hibiscus flower petals. Rich natural crimson pigment, ideal for organic hair dyes, face masks, and herbal blends.",
+    bulkAvailability: "300 Kg - 15 Metric Tons",
+    moq: "300 Kg",
+    moistureContent: "< 7%",
+    form: "Fine Ruby-Red Botanical Powder",
+    image: "/images/musli_minimal.png",
+    uses: ["Herbal hair packs & natural dyes", "Exfoliating botanical masks", "Tart beverage premixes", "Antioxidant nutraceuticals"]
+  },
+  {
+    id: "cinnamon-bark",
+    name: "Cinnamon Sticks (Dalchini Rolls)",
+    hindiName: "दालचीनी (Dalchini)",
+    botanicalName: "Cinnamomum verum",
+    category: "Spices / Bark",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Aromatic Ceylon and domestic true cinnamon rolled bark quills. Low coumarin, high cinnamaldehyde essential oil, and sweet woody aroma.",
+    bulkAvailability: "500 Kg - 20 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 9%",
+    form: "Whole Quills / Rolled Bark Sticks / Chips",
+    image: "/images/category_barks.png",
+    uses: ["Essential oil extraction", "Ayurvedic herbal teas", "Spice seasonings", "Metabolic health formulations"]
+  },
+  {
+    id: "cardamom-bold",
+    name: "Green Cardamom (Hari Elaichi Bold)",
+    hindiName: "हरी इलायची (Hari Elaichi)",
+    botanicalName: "Elettaria cardamomum",
+    category: "Spices / Seeds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "High-altitude shade plantation green cardamom pods sourced from Bodinayakanur and Idukki. Intense cineole aroma and dark aromatic seed core.",
+    bulkAvailability: "200 Kg - 10 Metric Tons",
+    moq: "200 Kg",
+    moistureContent: "< 9%",
+    form: "8mm+ Extra Bold Green Kiln-Cured Pods",
+    image: "/images/category_herbs.png",
+    uses: ["Flavoring confectionery & tea", "Ayurvedic digestive medicines", "Luxury spice masalas", "Aroma extractions"]
+  },
+  {
+    id: "cloves-whole",
+    name: "Whole Cloves (Laung Head & Stem)",
+    hindiName: "लौंग (Laung)",
+    botanicalName: "Syzygium aromaticum",
+    category: "Spices / Flower Buds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Handpicked Zanzibar and Madagascar grade cloves with intact round heads and reddish-brown stems. Rich in eugenol oil (> 15%).",
+    bulkAvailability: "300 Kg - 15 Metric Tons",
+    moq: "300 Kg",
+    moistureContent: "< 10%",
+    form: "Fully Dried Flower Buds with Intact Crown Head",
+    image: "/images/category_barks.png",
+    uses: ["Clove oil / eugenol extraction", "Dental care formulations", "Garam masala blends", "Respiratory tonics"]
+  },
+  {
+    id: "kalonji-seeds",
+    name: "Black Cumin / Nigella Seeds (Kalonji)",
+    hindiName: "कलौंजी (Kalonji)",
+    botanicalName: "Nigella sativa",
+    category: "Seeds / Spices",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Pure jet-black triangular Nigella sativa seeds rich in Thymoquinone and unsaturated fatty acids. Uniformly cleaned and free from dust.",
+    bulkAvailability: "500 Kg - 20 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 7%",
+    form: "99% Machine Cleaned Jet Black Matte Seeds",
+    image: "/images/saffron_minimal.png",
+    uses: ["Kalonji seed oil extraction", "Bakery and pickle toppings", "Ayurvedic immunity formulations", "Nutraceutical capsules"]
+  },
+  {
+    id: "flax-seeds",
+    name: "Flax Seeds (Alsi / Linseed)",
+    hindiName: "अलसी (Alsi)",
+    botanicalName: "Linum usitatissimum",
+    category: "Seeds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "High-purity golden brown Flax seeds packed with Alpha-Linolenic Acid (Omega-3), lignans, and soluble dietary fiber.",
+    bulkAvailability: "500 Kg - 20 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 7%",
+    form: "Clean Shiny Brown Seeds",
+    image: "/images/saffron_minimal.png",
+    uses: ["Flaxseed oil cold pressing", "Dietary fiber supplements", "Sports nutrition blends", "Animal feed premixes"]
+  },
+  {
+    id: "sesame-seeds",
+    name: "Natural White Sesame Seeds (Safed Til)",
+    hindiName: "सफेद तिल (Safed Til)",
+    botanicalName: "Sesamum indicum",
+    category: "Seeds",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Premium Sortex cleaned Indian natural white sesame seeds. High oil content (> 48%), sweet nutty taste, zero dark specks or pesticide residue.",
+    bulkAvailability: "1000 Kg - 50 Metric Tons",
+    moq: "1000 Kg",
+    moistureContent: "< 6%",
+    form: "99.95% Purity Sortex Cleaned White Seeds",
+    image: "/images/musli_minimal.png",
+    uses: ["Ayurvedic taila (medicated oil) base", "Tahini and sesame oil production", "Traditional sweets & confectionery", "Bakery toppings"]
+  },
+  {
+    id: "haritaki-powder",
+    name: "Haritaki Powder (Harad Churna)",
+    hindiName: "हरड़ चूर्ण / हरिताकी (Harad Churna)",
+    botanicalName: "Terminalia chebula",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Deseeded Badi Harad fruit shells pulverized into fine powder with high Chebulic acid and bio-tannins. Essential for Triphala and digestive formulations.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 8%",
+    form: "Fine 80-100 Mesh Deseeded Fruit Powder",
+    image: "/images/harad_baheda_minimal.png",
+    uses: ["Triphala Churna manufacturing", "Laxative and detox powders", "Classical Ayurvedic formulations", "Extract manufacturing"]
+  },
+  {
+    id: "bibhitaki-powder",
+    name: "Bibhitaki Powder (Baheda Churna)",
+    hindiName: "बहेड़ा चूर्ण / बिभीतकी (Baheda Churna)",
+    botanicalName: "Terminalia bellirica",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Clean deseeded Baheda fruit rinds milled into fine powder rich in gallic and ellagic acids. Core component of Triphala and respiratory rasayanas.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 8%",
+    form: "Fine 80-100 Mesh Deseeded Shell Powder",
+    image: "/images/harad_baheda_minimal.png",
+    uses: ["Triphala Churna constituent", "Kapha balancing medicines", "Hair care conditioning powders", "Astringent decoctions"]
+  },
+  {
+    id: "arjun-bark-powder",
+    name: "Arjun Bark Powder (Arjuna Chhal Churna)",
+    hindiName: "अर्जुन छाल चूर्ण (Arjun Chhal Churna)",
+    botanicalName: "Terminalia arjuna",
+    category: "Herbs Powder",
+    shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
+    fullDescription: "Mature Terminalia Arjuna inner bark pulverized into fine reddish-pink powder with standardized CoQ10, arjunic tannins, and cardiac flavonoids.",
+    bulkAvailability: "500 Kg - 25 Metric Tons",
+    moq: "500 Kg",
+    moistureContent: "< 8%",
+    form: "Ultra-Fine 80 Mesh Reddish-Pink Bark Powder",
+    image: "/images/arjun_minimal.png",
+    uses: ["Hridya cardiac formulations", "Ayurvedic kashayam and kwath", "Nutraceutical heart health capsules", "Botanical extract manufacturing"]
   }
 ];

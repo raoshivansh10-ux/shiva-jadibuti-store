@@ -15,10 +15,12 @@ import { BackToTop } from "@/components/BackToTop";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WishlistDrawer } from "@/components/WishlistDrawer";
 import { AuthModal } from "@/components/AuthModal";
+import { AskShivaFloatingButton, AskShivaChat } from "@/components/AskShiva";
 
 export const RawSpicesClientContent = () => {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quoteInitialProduct, setQuoteInitialProduct] = useState<string | undefined>(undefined);
+  const [askShivaOpen, setAskShivaOpen] = useState(false);
 
   const handleOpenQuoteModal = (productName?: string) => {
     setQuoteInitialProduct(productName);
@@ -66,6 +68,14 @@ export const RawSpicesClientContent = () => {
 
       {/* Authentication Login & Signup Modal */}
       <AuthModal />
+
+      {/* Ask Shiva AI Floating Button & Chat Assistant */}
+      <AskShivaFloatingButton onClick={() => setAskShivaOpen(true)} />
+      <AskShivaChat
+        isOpen={askShivaOpen}
+        onClose={() => setAskShivaOpen(false)}
+        onOpenQuoteModal={handleOpenQuoteModal}
+      />
 
       {/* Floating Action Buttons */}
       <WhatsAppButton />

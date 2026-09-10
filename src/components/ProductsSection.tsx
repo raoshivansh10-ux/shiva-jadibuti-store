@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { PRODUCTS, Product } from "@/data/products";
-import { Send, Info, Check, Search, Filter, ShoppingBag, CheckCircle2, Heart } from "lucide-react";
+import { PRODUCTS, Product, getProductStartingRetailPrice, getProductRetailVariants } from "@/data/products";
+import { Send, Info, Check, Search, Filter, ShoppingBag, CheckCircle2, Heart, Package, Layers, Sparkles } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { ProductDetailModal } from "@/components/ProductDetailModal";
 
 interface ProductsSectionProps {
   onOpenQuoteModal: (productName?: string) => void;
@@ -13,14 +14,27 @@ interface ProductsSectionProps {
 }
 
 export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSelectCategoryFilter }: ProductsSectionProps) => {
-  const { addToCart, cart } = useCart();
+  const { addRetailItem, addWholesaleItem, cart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [activeCategory, setActiveCategory] = useState(selectedCategoryFilter || "All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCatalogMode, setActiveCatalogMode] = useState<"retail" | "wholesale">("retail");
   const [selectedProductDetail, setSelectedProductDetail] = useState<Product | null>(null);
+  const [detailModalMode, setDetailModalMode] = useState<"retail" | "wholesale">("retail");
   const [addedToast, setAddedToast] = useState<string | null>(null);
 
-  const categories = ["All", "Medicinal Roots", "Herbal Leaves", "Barks & Woods", "Resins & Gums", "Medicinal Fruits", "Botanical Extracts"];
+  const categories = [
+    "All",
+    "Herbal Powders",
+    "Roots",
+    "Leaves",
+    "Bark",
+    "Seeds",
+    "Spices",
+    "Flowers",
+    "Fruits",
+    "Medicinal Herbs"
+  ];
 
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
@@ -29,18 +43,25 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
     }
   };
 
-  const handleAddToCart = (product: Product, e?: React.MouseEvent) => {
+  const handleQuickAdd = (product: Product, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    addToCart({
-      id: product.id,
-      name: product.name,
-      hindiName: product.hindiName,
-      category: product.category,
-      image: product.image,
-      moq: product.moq
-    }, 100, "Kg");
+    if (activeCatalogMode === "retail") {
+      const variants = getProductRetailVariants(product);
+      const defaultVariant = variants[0] || {
+        id: "100g",
+        size: "100 g",
+        price: 149,
+        mrp: 199,
+        stock: 50,
+        inStock: true
+      };
+      addRetailItem(product, defaultVariant, 1);
+      setAddedToast(`Added "${product.name} (${defaultVariant.size})" to Cart!`);
+    } else {
+      addWholesaleItem(product, 100, "Kg");
+      setAddedToast(`Added "${product.name} (100 Kg)" to Quote List!`);
+    }
 
-    setAddedToast(`Added "${product.name}" to Quote Cart`);
     setTimeout(() => setAddedToast(null), 2500);
   };
 
@@ -61,12 +82,46 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
     setTimeout(() => setAddedToast(null), 2500);
   };
 
+  const openProductDetail = (product: Product, mode: "retail" | "wholesale" = activeCatalogMode) => {
+    setDetailModalMode(mode);
+    setSelectedProductDetail(product);
+  };
+
   const filteredProducts = PRODUCTS.filter((p) => {
     const catToUse = selectedCategoryFilter || activeCategory;
-    const matchesCategory = catToUse === "All" || p.category === catToUse;
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          (p.hindiName ? p.hindiName.toLowerCase().includes(searchQuery.toLowerCase()) : false) ||
-                          p.botanicalName.toLowerCase().includes(searchQuery.toLowerCase());
+    let matchesCategory = catToUse === "All";
+    if (!matchesCategory) {
+      const pCat = p.category.toLowerCase();
+      if (catToUse === "Herbal Powders" || catToUse === "Herbs Powder") {
+        matchesCategory = pCat.includes("powder");
+      } else if (catToUse === "Roots") {
+        matchesCategory = pCat.includes("root");
+      } else if (catToUse === "Leaves") {
+        matchesCategory = pCat.includes("leave") || pCat.includes("leaf");
+      } else if (catToUse === "Bark") {
+        matchesCategory = pCat.includes("bark");
+      } else if (catToUse === "Seeds") {
+        matchesCategory = pCat.includes("seed") || pCat.includes("natural ingredients");
+      } else if (catToUse === "Spices") {
+        matchesCategory = pCat.includes("spice");
+      } else if (catToUse === "Flowers") {
+        matchesCategory = pCat.includes("flower");
+      } else if (catToUse === "Fruits") {
+        matchesCategory = pCat.includes("fruit");
+      } else {
+        matchesCategory = pCat.includes(catToUse.toLowerCase());
+      }
+    }
+
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch = !q ||
+      p.name.toLowerCase().includes(q) ||
+      (p.hindiName ? p.hindiName.toLowerCase().includes(q) : false) ||
+      p.botanicalName.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.form.toLowerCase().includes(q) ||
+      (p.uses && p.uses.some((u) => u.toLowerCase().includes(q)));
+
     return matchesCategory && matchesSearch;
   });
 
@@ -83,17 +138,48 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         
-        {/* Header */}
-        <div className="max-w-2xl mb-16 space-y-4">
-          <span className="text-xs font-mono tracking-[0.25em] text-[#98B4A1] uppercase block">
-            Complete Product Catalog
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal text-[#D0D9D8]">
-            Wholesale Raw Botanical Materials
-          </h2>
-          <p className="text-sm text-[#98B4A1] font-light leading-relaxed">
-            Organoleptically verified and lab-tested raw herbs supplied in commercial quantities (100 kg to Metric Tons).
-          </p>
+        {/* Header with Mode Selection */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-8">
+          <div className="max-w-2xl space-y-4">
+            <span className="text-xs font-mono tracking-[0.25em] text-[#98B4A1] uppercase block">
+              Pure Ayurvedic Botanicals & Bulk Raw Materials
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal text-[#D0D9D8]">
+              {activeCatalogMode === "retail" ? "Retail Shop & Home Packs" : "Wholesale Raw Botanicals"}
+            </h2>
+            <p className="text-sm text-[#98B4A1] font-light leading-relaxed">
+              {activeCatalogMode === "retail"
+                ? "Organically sourced, lab-verified authentic herbal powders, roots & whole spices packed in convenient 100g to 1Kg pouches for personal & family use."
+                : "Commercial supply & export grade botanicals supplied in commercial bulk quantities (100 Kg to 50 Metric Tons) for pharma, nutraceutical & ayurvedic manufacturing."}
+            </p>
+          </div>
+
+          {/* DUAL MODE TOGGLE BUTTONS */}
+          <div className="bg-[#213833] p-1.5 rounded-2xl border border-white/10 flex items-center shrink-0 self-start lg:self-auto">
+            <button
+              onClick={() => setActiveCatalogMode("retail")}
+              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+                activeCatalogMode === "retail"
+                  ? "bg-[#769489] text-[#172925] shadow-lg"
+                  : "text-[#98B4A1] hover:text-[#D0D9D8]"
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              <span>Retail Packs (100g - 1Kg)</span>
+            </button>
+
+            <button
+              onClick={() => setActiveCatalogMode("wholesale")}
+              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+                activeCatalogMode === "wholesale"
+                  ? "bg-[#769489] text-[#172925] shadow-lg"
+                  : "text-[#98B4A1] hover:text-[#D0D9D8]"
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>Wholesale Bulk (B2B)</span>
+            </button>
+          </div>
         </div>
 
         {/* Filter Controls */}
@@ -112,9 +198,16 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
               />
             </div>
 
-            <span className="text-xs font-mono text-[#98B4A1]">
-              Showing <strong className="text-[#769489] font-sans text-sm">{filteredProducts.length}</strong> Products
-            </span>
+            <div className="flex items-center space-x-4">
+              <span className="text-xs font-mono text-[#98B4A1]">
+                Showing <strong className="text-[#769489] font-sans text-sm">{filteredProducts.length}</strong> Products
+              </span>
+              {activeCatalogMode === "retail" && (
+                <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/20">
+                  <Sparkles className="w-3 h-3 mr-1" /> Free Delivery above ₹999
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Category Tabs */}
@@ -143,11 +236,13 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
           {filteredProducts.map((product) => {
             const inCart = cart.some(i => i.id === product.id || i.name === product.name);
             const isFav = isInWishlist(product.id || product.name);
+            const startingPrice = getProductStartingRetailPrice(product);
 
             return (
               <div
                 key={product.id}
-                className="bg-[#213833] border border-white/10 rounded-3xl overflow-hidden group hover:border-[#769489]/50 transition-all duration-300 flex flex-col justify-between shadow-xl"
+                onClick={() => openProductDetail(product)}
+                className="bg-[#213833] border border-white/10 rounded-3xl overflow-hidden group hover:border-[#769489]/50 transition-all duration-300 flex flex-col justify-between shadow-xl cursor-pointer"
               >
                 {/* Product Image Banner */}
                 <div className="p-3 pb-0">
@@ -178,9 +273,12 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
 
                       {/* Info Detail Trigger */}
                       <button
-                        onClick={() => setSelectedProductDetail(product)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openProductDetail(product);
+                        }}
                         className="p-2 rounded-full bg-black/40 hover:bg-[#769489] hover:text-[#172925] text-[#D0D9D8] transition-colors cursor-pointer"
-                        title="View Full Specifications"
+                        title="View Full Specifications & Pack Sizes"
                       >
                         <Info className="w-4 h-4" />
                       </button>
@@ -199,19 +297,28 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
                   </div>
 
                   <p className="text-xs text-[#98B4A1] font-light line-clamp-2 leading-relaxed">
-                    {product.shortDescription}
+                    {product.shortDescription || product.fullDescription}
                   </p>
 
                   <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-xs font-mono text-[#98B4A1]">
-                    <span>Bulk Supply:</span>
-                    <span className="text-[#769489] font-bold">{product.moq}</span>
+                    {activeCatalogMode === "retail" ? (
+                      <>
+                        <span>Retail Packs from:</span>
+                        <span className="text-[#769489] font-bold text-sm">₹{startingPrice} <span className="text-[10px] font-normal text-[#98B4A1]">/ 100g</span></span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Wholesale MOQ:</span>
+                        <span className="text-[#769489] font-bold">{product.moq || "25 Kg"}</span>
+                      </>
+                    )}
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="p-6 pt-0 grid grid-cols-2 gap-3">
+                <div className="p-6 pt-0 grid grid-cols-2 gap-3" onClick={(e) => e.stopPropagation()}>
                   <button
-                    onClick={(e) => handleAddToCart(product, e)}
+                    onClick={(e) => handleQuickAdd(product, e)}
                     className={`py-3 rounded-full border border-white/10 text-xs font-mono flex items-center justify-center space-x-1.5 transition-all cursor-pointer ${
                       inCart ? "bg-[#769489] text-[#172925] font-bold" : "bg-[#172925] text-[#D0D9D8] hover:bg-white/10"
                     }`}
@@ -221,11 +328,11 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
                   </button>
 
                   <button
-                    onClick={() => onOpenQuoteModal(product.name)}
+                    onClick={() => openProductDetail(product, activeCatalogMode)}
                     className="py-3 rounded-full bg-[#769489] hover:bg-[#D0D9D8] text-[#172925] font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-1 transition-all shadow-md active:scale-95 cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Buy Product</span>
+                    <span>{activeCatalogMode === "retail" ? "Select Pack" : "Buy / Quote"}</span>
                   </button>
                 </div>
 
@@ -236,121 +343,13 @@ export const ProductsSection = ({ onOpenQuoteModal, selectedCategoryFilter, onSe
 
       </div>
 
-      {/* Product Spec Detail Modal */}
-      {selectedProductDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="bg-[#213833] border border-white/15 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 relative text-[#D0D9D8] shadow-2xl">
-            <button
-              onClick={() => setSelectedProductDetail(null)}
-              className="absolute top-6 right-6 p-2 rounded-full bg-[#172925] text-[#D0D9D8] hover:bg-white/10 transition-colors cursor-pointer"
-            >
-              ✕
-            </button>
-
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <img
-                  src={selectedProductDetail.image}
-                  alt={selectedProductDetail.name}
-                  className="w-full sm:w-48 h-48 object-cover rounded-2xl border border-white/10"
-                />
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono text-[#769489] uppercase tracking-widest block">
-                      {selectedProductDetail.category}
-                    </span>
-                    <button
-                      onClick={(e) => handleToggleWishlist(selectedProductDetail, e)}
-                      className={`p-2 rounded-full border border-white/10 transition-colors cursor-pointer ${
-                        isInWishlist(selectedProductDetail.id || selectedProductDetail.name)
-                          ? "bg-rose-500 text-white"
-                          : "bg-[#172925] text-[#D0D9D8] hover:text-rose-400"
-                      }`}
-                      title="Add to Wishlist"
-                    >
-                      <Heart className={`w-4 h-4 ${isInWishlist(selectedProductDetail.id || selectedProductDetail.name) ? "fill-white" : ""}`} />
-                    </button>
-                  </div>
-
-                  <h3 className="text-2xl font-serif text-[#D0D9D8]">
-                    {selectedProductDetail.name} ({selectedProductDetail.hindiName})
-                  </h3>
-                  <p className="text-xs italic text-[#98B4A1] font-light">
-                    Botanical: {selectedProductDetail.botanicalName}
-                  </p>
-                  <p className="text-xs text-[#98B4A1] font-light leading-relaxed pt-2">
-                    {selectedProductDetail.fullDescription}
-                  </p>
-                </div>
-              </div>
-
-              {/* Detailed Specs */}
-              <div className="pt-4 border-t border-white/10 grid grid-cols-2 gap-4 text-xs font-mono text-[#98B4A1]">
-                <div>
-                  <span className="text-[#769489] uppercase block mb-1">Standard Cut Form</span>
-                  <p className="text-[#D0D9D8]">{selectedProductDetail.cutForm}</p>
-                </div>
-                <div>
-                  <span className="text-[#769489] uppercase block mb-1">Moisture Level</span>
-                  <p className="text-[#D0D9D8]">{selectedProductDetail.moistureLevel}</p>
-                </div>
-                <div>
-                  <span className="text-[#769489] uppercase block mb-1">Sourcing Belts</span>
-                  <p className="text-[#D0D9D8]">{selectedProductDetail.originRegion}</p>
-                </div>
-                <div>
-                  <span className="text-[#769489] uppercase block mb-1">Min Wholesale Order</span>
-                  <p className="text-[#D0D9D8] font-bold">{selectedProductDetail.moq}</p>
-                </div>
-              </div>
-
-              {/* Uses */}
-              <div className="pt-4 border-t border-white/10 space-y-2">
-                <span className="text-xs font-mono text-[#769489] uppercase tracking-widest block">Primary Applications</span>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProductDetail.uses.map((u, i) => (
-                    <span key={i} className="px-3 py-1 rounded-full bg-[#172925] border border-white/10 text-xs text-[#D0D9D8] flex items-center space-x-1">
-                      <Check className="w-3 h-3 text-[#769489]" />
-                      <span>{u}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-6 flex flex-wrap justify-end gap-3">
-                <button
-                  onClick={(e) => handleToggleWishlist(selectedProductDetail, e)}
-                  className="px-5 py-3 rounded-full bg-[#172925] border border-white/10 text-xs font-mono text-[#D0D9D8] hover:text-rose-400 flex items-center space-x-2 cursor-pointer"
-                >
-                  <Heart className={`w-4 h-4 ${isInWishlist(selectedProductDetail.id || selectedProductDetail.name) ? "fill-rose-400 text-rose-400" : ""}`} />
-                  <span>{isInWishlist(selectedProductDetail.id || selectedProductDetail.name) ? "In Wishlist ♥" : "Add Wishlist"}</span>
-                </button>
-
-                <button
-                  onClick={() => handleAddToCart(selectedProductDetail)}
-                  className="px-5 py-3 rounded-full bg-[#172925] border border-white/10 text-xs font-mono text-[#D0D9D8] hover:bg-white/10 flex items-center space-x-2 cursor-pointer"
-                >
-                  <ShoppingBag className="w-4 h-4 text-[#769489]" />
-                  <span>Add To Cart</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    const name = selectedProductDetail.name;
-                    setSelectedProductDetail(null);
-                    onOpenQuoteModal(name);
-                  }}
-                  className="px-6 py-3 rounded-full bg-[#769489] text-[#172925] font-bold text-xs uppercase tracking-widest flex items-center space-x-2 cursor-pointer"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Buy Product / Quote</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      )}
+      {/* DUAL PRODUCT DETAIL MODAL (RETAIL PACKS + WHOLESALE B2B) */}
+      <ProductDetailModal
+        product={selectedProductDetail}
+        initialMode={detailModalMode}
+        onClose={() => setSelectedProductDetail(null)}
+        onOpenQuoteModal={onOpenQuoteModal}
+      />
 
     </section>
   );

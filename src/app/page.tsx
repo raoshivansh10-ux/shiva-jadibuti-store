@@ -18,10 +18,12 @@ import { BackToTop } from "@/components/BackToTop";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WishlistDrawer } from "@/components/WishlistDrawer";
 import { AuthModal } from "@/components/AuthModal";
+import { AskShivaFloatingButton, AskShivaChat } from "@/components/AskShiva";
 
 export default function Home() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quoteInitialProduct, setQuoteInitialProduct] = useState<string | undefined>(undefined);
+  const [askShivaOpen, setAskShivaOpen] = useState(false);
 
   // Ensure the page always starts strictly from the top on reload/load
   useEffect(() => {
@@ -87,6 +89,14 @@ export default function Home() {
 
       {/* Authentication Login & Signup Modal */}
       <AuthModal />
+
+      {/* Ask Shiva AI Floating Button & Chat Assistant */}
+      <AskShivaFloatingButton onClick={() => setAskShivaOpen(true)} />
+      <AskShivaChat
+        isOpen={askShivaOpen}
+        onClose={() => setAskShivaOpen(false)}
+        onOpenQuoteModal={handleOpenQuoteModal}
+      />
 
       {/* Floating Actions */}
       <WhatsAppButton />

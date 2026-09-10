@@ -8,13 +8,13 @@ interface NavbarProps {
 
 export const Navbar = ({ onOpenQuoteModal }: NavbarProps) => {
   const navItems = [
+    { label: "Shop Retail", href: "/shop" },
     { label: "Products", href: "/#products" },
     { label: "Spices", href: "/raw-spices" },
     { label: "Categories", href: "/#categories" },
     { label: "Health", href: "/#health-solutions" },
+    { label: "Orders", href: "/orders" },
     { label: "Why Us", href: "/#why-us" },
-    { label: "Process", href: "/#process" },
-    { label: "Gallery", href: "/#gallery" },
     { label: "Contact", href: "/#contact" }
   ];
 
