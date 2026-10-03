@@ -25,7 +25,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Malabar Coast, Kerala, India",
     packaging: "25kg / 50kg Jute Bags & PP Bags",
     bulkSupply: "500 Kg - 50 Metric Tons",
-    image: "/images/category_barks.png",
+    image: "/images/black_pepper_minimal.png",
     shortDescription: "High-piperine garbled black pepper berries harvested from traditional Kerala spice gardens.",
     fullDescription: "Premium hand-picked Tellicherry & Malabar Garbled Extra Bold black pepper. Rich in piperine content (> 5%), intense pungent aroma, and zero dark mold or extraneous matter.",
     uses: ["Spice Blends & Masalas", "Pharma Extract Extraction", "Meat Processing", "Ayurvedic Trikatu Churna"]
@@ -55,7 +55,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Western Ghats, Bodinayakanur & Idukki",
     packaging: "10kg Vacuum Bags / 25kg Master Cartons",
     bulkSupply: "100 Kg - 15 Metric Tons",
-    image: "/images/category_herbs.png",
+    image: "/images/cardamom_minimal.png",
     shortDescription: "Vibrant emerald green pods bursting with rich essential cineole oils.",
     fullDescription: "Queen of Spices sourced directly from high-altitude shade plantations in Idukki. Naturally kiln-cured to preserve deep green pigmentation, intense aroma, and plump seed density.",
     uses: ["Sweets & Confectionery", "Tea & Beverage Blends", "Garam Masala", "Ayurvedic Digestives"]
@@ -145,7 +145,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Salem, Tamil Nadu & Nizamabad, Telangana",
     packaging: "25kg / 50kg Jute Sacks",
     bulkSupply: "1000 Kg - 50 Metric Tons",
-    image: "/images/saffron_minimal.png",
+    image: "/images/turmeric_finger_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Premium double-polished Salem and Nizamabad whole turmeric finger rhizomes with high natural Curcumin content (> 3.5%). Thoroughly cleaned, cured, and hygienic sun-dried.",
     uses: ["Curcumin Extraction", "Commercial Spice Grinding", "Ayurvedic Formulations", "HORECA Wholesale"]
@@ -160,7 +160,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Unjha, Gujarat & Rajasthan, India",
     packaging: "25kg / 50kg PP Bags / Multi-layer Paper Sacks",
     bulkSupply: "1000 Kg - 40 Metric Tons",
-    image: "/images/saffron_minimal.png",
+    image: "/images/cumin_seeds_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Export-grade whole cumin seeds sorted to 99% purity. High volatile cumin oil content, uniform brown coloration, and rich aroma for spice milling and Ayurveda.",
     uses: ["Ayurvedic Digestive Churna", "Oleoresin Extraction", "Commercial Spice Masalas", "HORECA Wholesale"]
@@ -175,7 +175,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Kota & Ramganj Mandi, Rajasthan, India",
     packaging: "25kg / 40kg Jute & HDPE Bags",
     bulkSupply: "1000 Kg - 50 Metric Tons",
-    image: "/images/category_herbs.png",
+    image: "/images/coriander_seeds_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "High-linalool whole coriander seeds sourced from prime Rajasthan harvesting belts. Machine-cleaned, uniform size, free from infestation or split dust.",
     uses: ["Kashayam Formulations", "Curry Powder Production", "Herbal Infusions", "Essential Oil Extraction"]
@@ -190,7 +190,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Unjha, Gujarat & Lucknow, UP, India",
     packaging: "25kg / 50kg Multi-wall Paper Bags",
     bulkSupply: "500 Kg - 25 Metric Tons",
-    image: "/images/category_herbs.png",
+    image: "/images/fennel_seeds_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Sweet fragrant bold green Lucknowi and Gujarat fennel seeds. High essential anethole oil density, clean grading, sweet refreshing flavor profile.",
     uses: ["Digestive Mukhwas", "Ayurvedic Syrups", "Confectionery Flavoring", "Herbal Infusions"]
@@ -198,14 +198,14 @@ export const RAW_SPICES: SpiceProduct[] = [
   {
     id: "fenugreek-seeds",
     name: "Fenugreek Seeds (Rajasthani Methi Dana)",
-    hindiName: "मेथी दाana (Methi Dana)",
+    hindiName: "मेथी दाना (Methi Dana)",
     scientificName: "Trigonella foenum-graecum",
     category: "Seeds & Raw Materials",
     grade: "Machine Cleaned 99% Pure Golden Bold",
     origin: "Pratapgarh & Kota, Rajasthan, India",
     packaging: "25kg / 50kg HDPE / Jute Sacks",
     bulkSupply: "500 Kg - 25 Metric Tons",
-    image: "/images/saffron_minimal.png",
+    image: "/images/fenugreek_seeds_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Premium machine-cleaned Rajasthani Fenugreek seeds rich in natural mucilage, 4-hydroxyisoleucine, and saponins. Free from dust, stones, or split seeds.",
     uses: ["Metabolic Wellness Extracts", "Herbal Hair Care", "Spice Masalas", "Pickle Manufacturing"]
@@ -220,7 +220,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Western Ghats & Kerala, India",
     packaging: "20kg / 25kg Master Cartons",
     bulkSupply: "500 Kg - 20 Metric Tons",
-    image: "/images/category_barks.png",
+    image: "/images/cinnamon_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Aromatic true cinnamon rolled bark quills with low coumarin and high natural cinnamaldehyde essential oil. Crisp texture and sweet woody aroma.",
     uses: ["Essential Oil Extraction", "Ayurvedic Herbal Teas", "Spice Seasonings", "Metabolic Formulations"]
@@ -235,7 +235,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Kanyakumari, Tamil Nadu & Madagascar",
     packaging: "25kg Multi-layer Kraft Paper Bags",
     bulkSupply: "300 Kg - 15 Metric Tons",
-    image: "/images/category_barks.png",
+    image: "/images/cloves_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Handpicked premium whole cloves with intact crown heads and reddish-brown stems. Rich in eugenol essential oil (> 16%), pungent and aromatic.",
     uses: ["Clove Oil & Eugenol Extraction", "Dental Care Formulations", "Garam Masala Blends", "Respiratory Tonics"]
@@ -250,7 +250,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Madhya Pradesh & Rajasthan, India",
     packaging: "25kg / 50kg PP Bags",
     bulkSupply: "500 Kg - 20 Metric Tons",
-    image: "/images/saffron_minimal.png",
+    image: "/images/kalonji_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Pure jet-black triangular Nigella sativa seeds rich in Thymoquinone and unsaturated fatty acids. Uniformly cleaned and free from extraneous matter.",
     uses: ["Kalonji Seed Oil Extraction", "Bakery & Pickle Toppings", "Ayurvedic Formulations", "Nutraceutical Capsules"]
@@ -265,7 +265,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Madhya Pradesh & Gujarat, India",
     packaging: "25kg / 50kg Multi-wall Paper Sacks",
     bulkSupply: "500 Kg - 20 Metric Tons",
-    image: "/images/saffron_minimal.png",
+    image: "/images/flax_seeds_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "High-purity brown Flax seeds packed with Alpha-Linolenic Acid (Omega-3), lignans, and soluble dietary fiber. Sorted and graded for industrial processing.",
     uses: ["Flaxseed Oil Cold Pressing", "Dietary Fiber Supplements", "Sports Nutrition", "Nutraceutical Premixes"]
@@ -280,7 +280,7 @@ export const RAW_SPICES: SpiceProduct[] = [
     origin: "Gujarat & West Bengal, India",
     packaging: "25kg / 50kg Multi-layer Paper Bags",
     bulkSupply: "1000 Kg - 50 Metric Tons",
-    image: "/images/musli_minimal.png",
+    image: "/images/sesame_seeds_minimal.png",
     shortDescription: "Dried botanical material suitable for wholesale sourcing and further processing.",
     fullDescription: "Premium Sortex cleaned Indian natural white sesame seeds. High oil content (> 48%), sweet nutty taste, zero dark specks or pesticide residue.",
     uses: ["Ayurvedic Medicated Oil (Taila) Base", "Tahini & Sesame Oil Production", "Confectionery", "Bakery Wholesale"]
