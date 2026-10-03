@@ -487,7 +487,7 @@ export const PRODUCTS: Product[] = [
     moq: "1000 Kg",
     moistureContent: "< 9%",
     form: "Double Polished Whole Dried Fingers / Bulbs",
-    image: "/images/saffron_minimal.png",
+    image: "/images/turmeric_finger_minimal.png",
     uses: ["Curcumin extraction", "Commercial spice grinding", "Ayurvedic medicines", "HORECA bulk supply"]
   },
   {
@@ -502,7 +502,7 @@ export const PRODUCTS: Product[] = [
     moq: "1000 Kg",
     moistureContent: "< 8%",
     form: "Pure Micro-Milled Golden Powder",
-    image: "/images/saffron_minimal.png",
+    image: "/images/turmeric_powder_minimal.png",
     uses: ["Ayurvedic formulations", "Food & spice blends", "Curcumin supplements", "Herbal skincare"]
   },
   {
@@ -517,7 +517,7 @@ export const PRODUCTS: Product[] = [
     moq: "1000 Kg",
     moistureContent: "< 10%",
     form: "Whole Dried Garbled Extra Bold Berries",
-    image: "/images/category_barks.png",
+    image: "/images/black_pepper_minimal.png",
     uses: ["Piperine extract manufacturing", "Trikatu Churna raw material", "Spice masalas", "Pharmaceutical formulations"]
   },
   {
@@ -532,7 +532,7 @@ export const PRODUCTS: Product[] = [
     moq: "1000 Kg",
     moistureContent: "< 8%",
     form: "99% Pure Machine Cleaned Whole Seeds",
-    image: "/images/saffron_minimal.png",
+    image: "/images/cumin_seeds_minimal.png",
     uses: ["Ayurvedic digestive churna", "Oleoresin extraction", "Commercial spice blends", "HORECA wholesale"]
   },
   {
@@ -547,7 +547,7 @@ export const PRODUCTS: Product[] = [
     moq: "1000 Kg",
     moistureContent: "< 8%",
     form: "Whole Dried Green / Golden Oval Seeds",
-    image: "/images/category_herbs.png",
+    image: "/images/coriander_seeds_minimal.png",
     uses: ["Kashayam formulations", "Curry powder production", "Herbal infusions", "Essential oil extraction"]
   },
   {
@@ -562,7 +562,7 @@ export const PRODUCTS: Product[] = [
     moq: "500 Kg",
     moistureContent: "< 8%",
     form: "Bold Green Whole Seeds",
-    image: "/images/category_herbs.png",
+    image: "/images/fennel_seeds_minimal.png",
     uses: ["Digestive mukhwas", "Ayurvedic syrups", "Confectionery flavoring", "Herbal infusions"]
   },
   {
@@ -577,7 +577,7 @@ export const PRODUCTS: Product[] = [
     moq: "500 Kg",
     moistureContent: "< 7%",
     form: "Machine Cleaned Yellow-Brown Seeds",
-    image: "/images/saffron_minimal.png",
+    image: "/images/fenugreek_seeds_minimal.png",
     uses: ["Metabolic wellness extracts", "Herbal hair care", "Spice masalas", "Pickle manufacturing"]
   },
   {
@@ -682,7 +682,7 @@ export const PRODUCTS: Product[] = [
     moq: "500 Kg",
     moistureContent: "< 9%",
     form: "Whole Quills / Rolled Bark Sticks / Chips",
-    image: "/images/category_barks.png",
+    image: "/images/cinnamon_minimal.png",
     uses: ["Essential oil extraction", "Ayurvedic herbal teas", "Spice seasonings", "Metabolic health formulations"]
   },
   {
@@ -697,7 +697,7 @@ export const PRODUCTS: Product[] = [
     moq: "200 Kg",
     moistureContent: "< 9%",
     form: "8mm+ Extra Bold Green Kiln-Cured Pods",
-    image: "/images/category_herbs.png",
+    image: "/images/cardamom_minimal.png",
     uses: ["Flavoring confectionery & tea", "Ayurvedic digestive medicines", "Luxury spice masalas", "Aroma extractions"]
   },
   {
@@ -712,7 +712,7 @@ export const PRODUCTS: Product[] = [
     moq: "300 Kg",
     moistureContent: "< 10%",
     form: "Fully Dried Flower Buds with Intact Crown Head",
-    image: "/images/category_barks.png",
+    image: "/images/cloves_minimal.png",
     uses: ["Clove oil / eugenol extraction", "Dental care formulations", "Garam masala blends", "Respiratory tonics"]
   },
   {
@@ -727,7 +727,7 @@ export const PRODUCTS: Product[] = [
     moq: "500 Kg",
     moistureContent: "< 7%",
     form: "99% Machine Cleaned Jet Black Matte Seeds",
-    image: "/images/saffron_minimal.png",
+    image: "/images/kalonji_minimal.png",
     uses: ["Kalonji seed oil extraction", "Bakery and pickle toppings", "Ayurvedic immunity formulations", "Nutraceutical capsules"]
   },
   {
@@ -742,7 +742,7 @@ export const PRODUCTS: Product[] = [
     moq: "500 Kg",
     moistureContent: "< 7%",
     form: "Clean Shiny Brown Seeds",
-    image: "/images/saffron_minimal.png",
+    image: "/images/flax_seeds_minimal.png",
     uses: ["Flaxseed oil cold pressing", "Dietary fiber supplements", "Sports nutrition blends", "Animal feed premixes"]
   },
   {
@@ -757,7 +757,7 @@ export const PRODUCTS: Product[] = [
     moq: "1000 Kg",
     moistureContent: "< 6%",
     form: "99.95% Purity Sortex Cleaned White Seeds",
-    image: "/images/musli_minimal.png",
+    image: "/images/sesame_seeds_minimal.png",
     uses: ["Ayurvedic taila (medicated oil) base", "Tahini and sesame oil production", "Traditional sweets & confectionery", "Bakery toppings"]
   },
   {
