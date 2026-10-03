@@ -38,7 +38,7 @@ export const CATEGORIES: Category[] = [
     count: "60+ Products",
     description: "Clean, germinable and oil-grade seeds including Methi, Kalonji, Isabgol, and Tukmaria.",
     iconName: "Dot",
-    image: "/images/saffron_minimal.png"
+    image: "/images/cumin_seeds_minimal.png"
   },
   {
     id: "Leaves",
@@ -62,7 +62,7 @@ export const CATEGORIES: Category[] = [
     count: "50+ Products",
     description: "Whole & deseeded raw fruits like Amla, Harad, Baheda, Gokhru, and Amaltas pods.",
     iconName: "Apple",
-    image: "/images/ashwagandha_minimal.png"
+    image: "/images/amla_minimal.png"
   },
   {
     id: "Natural Gums",
@@ -86,7 +86,7 @@ export const CATEGORIES: Category[] = [
     count: "45+ Products",
     description: "Pharma-grade spices like Ceylon Cinnamon, Black Pepper, Dry Ginger (Sonth), and Long Pepper.",
     iconName: "Flame",
-    image: "/images/saffron_minimal.png"
+    image: "/images/black_pepper_minimal.png"
   },
   {
     id: "Dry Herbs",
