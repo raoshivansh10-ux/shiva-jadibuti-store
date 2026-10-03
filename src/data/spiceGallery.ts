@@ -32,35 +32,35 @@ export const SPICE_GALLERY_ITEMS: SpiceGalleryItem[] = [
     id: "sg4",
     title: "Temperature-Controlled Central Spice Warehouse",
     category: "Spice Warehouses",
-    image: "/images/category_barks.png",
+    image: "/images/g3_warehouse.jpg",
     description: "Modern B2B warehouse facility storing multi-ton inventory under humidity-controlled conditions."
   },
   {
     id: "sg5",
     title: "Multi-Layer Vacuum & Poly-Lined Export Bags",
     category: "Packaging",
-    image: "/images/shilajit_minimal.png",
+    image: "/images/g5_packaging.jpg",
     description: "Heavy-duty 25kg / 50kg moisture-proof packaging prepared for long-distance domestic & export shipping."
   },
   {
     id: "sg6",
     title: "Bulk Storage Sacks of Cumin & Coriander",
     category: "Bulk Storage",
-    image: "/images/musli_minimal.png",
+    image: "/images/coriander_seeds_minimal.png",
     description: "Palletized bulk storage ready for fast dispatch to food processors and spice manufacturers."
   },
   {
     id: "sg7",
     title: "Hand-Sorted Tellicherry Black Pepper Berries",
     category: "Sorting Process",
-    image: "/images/ashwagandha_minimal.png",
+    image: "/images/black_pepper_minimal.png",
     description: "Meticulous hand-grading of extra bold Tellicherry pepper corns."
   },
   {
     id: "sg8",
     title: "Solar Dehydrated Red Chilli & Turmeric Storage",
     category: "Drying Process",
-    image: "/images/saffron_minimal.png",
+    image: "/images/turmeric_finger_minimal.png",
     description: "Uniformly sun-dried red chillies and polished golden turmeric fingers."
   }
 ];
